@@ -48,27 +48,84 @@ export function generateTimesheet(
   const activities: GeneratedActivity[] = [];
   let sentenceIdx = 0;
 
+  const reqTaskCount = typeof config.targetTaskCount === 'number' && config.targetTaskCount > 0 ? config.targetTaskCount : null;
+
+  if (reqTaskCount) {
+    // Generate exact N tasks matching targetTotalMinutes
+    const baseDuration = Math.max(15, Math.floor(targetTotalMinutes / reqTaskCount / 15) * 15);
+    const durations: number[] = new Array(reqTaskCount).fill(baseDuration);
+    
+    // Distribute remainder minutes in 15-min increments
+    let totalAssigned = durations.reduce((a, b) => a + b, 0);
+    let diff = targetTotalMinutes - totalAssigned;
+    let dIdx = 0;
+    while (diff >= 15) {
+      durations[dIdx % reqTaskCount] += 15;
+      diff -= 15;
+      dIdx++;
+    }
+    if (diff > 0 && durations.length > 0) {
+      durations[durations.length - 1] += diff;
+    }
+
+    for (let i = 0; i < reqTaskCount; i++) {
+      if (currentPointer >= lunchStart && currentPointer < lunchEnd) {
+        currentPointer = new Date(lunchEnd.getTime());
+      }
+
+      const sentenceItem = pool[sentenceIdx % pool.length];
+      sentenceIdx++;
+      let taskDuration = durations[i];
+
+      const potentialEndTime = new Date(currentPointer.getTime() + taskDuration * 60 * 1000);
+      if (currentPointer < lunchStart && potentialEndTime > lunchStart) {
+        const minsBeforeLunch = Math.round((lunchStart.getTime() - currentPointer.getTime()) / (60 * 1000));
+        if (minsBeforeLunch >= 15) {
+          taskDuration = minsBeforeLunch;
+        } else {
+          currentPointer = new Date(lunchEnd.getTime());
+        }
+      }
+
+      const taskStartTime = new Date(currentPointer.getTime());
+      const taskEndTime = new Date(taskStartTime.getTime() + taskDuration * 60 * 1000);
+
+      activities.push({
+        id: `act_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+        sentenceId: sentenceItem.id,
+        rawText: sentenceItem.text,
+        polishedText: sentenceItem.text,
+        category: sentenceItem.category,
+        startTime: formatTimeHHMM(taskStartTime),
+        endTime: formatTimeHHMM(taskEndTime),
+        durationMinutes: taskDuration,
+        isAiPolished: false,
+        status: 'pending',
+      });
+
+      accumulatedMinutes += taskDuration;
+      currentPointer = new Date(taskEndTime.getTime());
+    }
+
+    return activities;
+  }
+
+  // Default auto-duration loop
   while (accumulatedMinutes < targetTotalMinutes) {
-    // If current pointer hits or falls within lunch break, jump past lunch break
     if (currentPointer >= lunchStart && currentPointer < lunchEnd) {
       currentPointer = new Date(lunchEnd.getTime());
     }
 
-    // Pick next sentence
     const sentenceItem = pool[sentenceIdx % pool.length];
     sentenceIdx++;
 
-    // Determine task duration
     const remainingTarget = targetTotalMinutes - accumulatedMinutes;
-    // Base duration with +/- 15 min random variance
-    const variance = (Math.floor(Math.random() * 3) - 1) * 15; // -15, 0, +15
+    const variance = (Math.floor(Math.random() * 3) - 1) * 15;
     let taskDuration = Math.max(15, sentenceItem.defaultDurationMinutes + variance);
 
-    // Don't exceed max per task or remaining target
     taskDuration = Math.min(taskDuration, config.maxDurationPerTask || 120);
     taskDuration = Math.min(taskDuration, remainingTarget);
 
-    // If remaining is small (< 15 mins), add to previous activity if exists, or use 15 mins
     if (remainingTarget < 15 && activities.length > 0) {
       const lastActivity = activities[activities.length - 1];
       lastActivity.durationMinutes += remainingTarget;
@@ -78,15 +135,12 @@ export function generateTimesheet(
       break;
     }
 
-    // Check if task crosses lunch break; if so, split or shift before lunch
     const potentialEndTime = new Date(currentPointer.getTime() + taskDuration * 60 * 1000);
     if (currentPointer < lunchStart && potentialEndTime > lunchStart) {
-      // Shorten duration to end right at lunch start
       const minsBeforeLunch = Math.round((lunchStart.getTime() - currentPointer.getTime()) / (60 * 1000));
       if (minsBeforeLunch >= 15) {
         taskDuration = minsBeforeLunch;
       } else {
-        // If too short, skip to post-lunch
         currentPointer = new Date(lunchEnd.getTime());
       }
     }
@@ -98,7 +152,7 @@ export function generateTimesheet(
       id: `act_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       sentenceId: sentenceItem.id,
       rawText: sentenceItem.text,
-      polishedText: sentenceItem.text, // Initialized with raw text
+      polishedText: sentenceItem.text,
       category: sentenceItem.category,
       startTime: formatTimeHHMM(taskStartTime),
       endTime: formatTimeHHMM(taskEndTime),

@@ -53,6 +53,7 @@ export interface GeneratorConfig {
   dateStr: string; // YYYY-MM-DD
   maxDurationPerTask: number;
   defaultProjectTag: string; // Default: "#BLS"
+  targetTaskCount?: number | 'auto'; // Number of tasks per day (e.g. 3, 4, 5, 6, 7, 8, 'auto')
 }
 
 export interface EmitSettings {
