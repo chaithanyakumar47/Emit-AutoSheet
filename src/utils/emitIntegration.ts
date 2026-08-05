@@ -67,8 +67,8 @@ function resolveTargetUrl(settings: EmitSettings, endpoint: string = '/member/ac
   const teamId = settings.teamId || BLACKCURRANT_TEAM_ID;
 
   let baseUrl = configuredBase;
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    if (configuredBase === 'https://api.emit.work') {
+  if (typeof window !== 'undefined') {
+    if (configuredBase === 'https://api.emit.work' || configuredBase === '') {
       baseUrl = '/api-emit';
     }
   }
