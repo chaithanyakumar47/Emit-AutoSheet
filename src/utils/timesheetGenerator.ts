@@ -75,20 +75,19 @@ export function generateTimesheet(
 
       const sentenceItem = pool[sentenceIdx % pool.length];
       sentenceIdx++;
-      let taskDuration = durations[i];
-
-      const potentialEndTime = new Date(currentPointer.getTime() + taskDuration * 60 * 1000);
-      if (currentPointer < lunchStart && potentialEndTime > lunchStart) {
-        const minsBeforeLunch = Math.round((lunchStart.getTime() - currentPointer.getTime()) / (60 * 1000));
-        if (minsBeforeLunch >= 15) {
-          taskDuration = minsBeforeLunch;
-        } else {
-          currentPointer = new Date(lunchEnd.getTime());
-        }
-      }
+      const taskDuration = durations[i];
 
       const taskStartTime = new Date(currentPointer.getTime());
-      const taskEndTime = new Date(taskStartTime.getTime() + taskDuration * 60 * 1000);
+      
+      // Calculate raw end time without lunch offset
+      let rawEndTime = new Date(taskStartTime.getTime() + taskDuration * 60 * 1000);
+
+      // If task spans across or touches lunch break, offset end time by lunchBreakMinutes
+      if (taskStartTime < lunchEnd && rawEndTime > lunchStart) {
+        rawEndTime = new Date(rawEndTime.getTime() + config.lunchBreakMinutes * 60 * 1000);
+      }
+
+      const taskEndTime = rawEndTime;
 
       activities.push({
         id: `act_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,

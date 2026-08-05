@@ -331,6 +331,8 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
               className="w-full bg-slate-950 border border-purple-800/60 rounded-xl px-2.5 py-2 text-xs text-purple-300 focus:outline-none focus:border-purple-500 font-sans font-semibold"
             >
               <option value="auto">Auto (Varied)</option>
+              <option value="1">1 Task / Day</option>
+              <option value="2">2 Tasks / Day</option>
               <option value="3">3 Tasks / Day</option>
               <option value="4">4 Tasks / Day</option>
               <option value="5">5 Tasks / Day</option>
@@ -558,6 +560,8 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                       className="bg-slate-950 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-purple-300 font-semibold focus:outline-none"
                     >
                       <option value="auto">Auto</option>
+                      <option value="1">1 Task</option>
+                      <option value="2">2 Tasks</option>
                       <option value="3">3 Tasks</option>
                       <option value="4">4 Tasks</option>
                       <option value="5">5 Tasks</option>
@@ -641,6 +645,8 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                   className="bg-slate-950 border border-purple-800/60 rounded-lg px-2 py-1 text-xs text-purple-300 font-semibold focus:outline-none"
                 >
                   <option value="auto">Auto (Varied)</option>
+                  <option value="1">1 Task / Day</option>
+                  <option value="2">2 Tasks / Day</option>
                   <option value="3">3 Tasks / Day</option>
                   <option value="4">4 Tasks / Day</option>
                   <option value="5">5 Tasks / Day</option>
