@@ -28,6 +28,7 @@ export const App: React.FC = () => {
   // 2. Config state
   const [config, setConfig] = useState<GeneratorConfig>(() => {
     const today = new Date().toISOString().split('T')[0];
+    const savedTag = localStorage.getItem('emit_project_tag') || '#BLS';
     return {
       targetHours: 7.5,
       startTimeStr: '09:30',
@@ -36,7 +37,7 @@ export const App: React.FC = () => {
       randomizeOrder: true,
       dateStr: today,
       maxDurationPerTask: 120,
-      defaultProjectTag: '#BLS',
+      defaultProjectTag: savedTag,
     };
   });
 
@@ -228,8 +229,15 @@ export const App: React.FC = () => {
     return sentences.filter(s => s.isActive).length;
   }, [sentences]);
 
+  const handleSelectProjectTag = (newTag: string) => {
+    const cleanTag = newTag.startsWith('#') ? newTag : `#${newTag}`;
+    setConfig(prev => ({ ...prev, defaultProjectTag: cleanTag }));
+    localStorage.setItem('emit_project_tag', cleanTag);
+    addToast('info', `Switched active project tag to ${cleanTag}`);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 font-sans text-slate-100 ambient-bg selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col font-sans ambient-bg">
       
       {/* Top Navigation Header */}
       <Navbar
@@ -242,6 +250,8 @@ export const App: React.FC = () => {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         activeSentencesCount={activeSentencesCount}
+        selectedProjectTag={config.defaultProjectTag}
+        onSelectProjectTag={handleSelectProjectTag}
       />
 
       {/* Main Workspace Container */}

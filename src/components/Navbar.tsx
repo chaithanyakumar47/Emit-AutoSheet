@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Layers, BookOpen, ExternalLink, Zap, Calendar, Menu, X, Settings, Clock, HelpCircle } from 'lucide-react';
+import { ShieldCheck, Layers, BookOpen, ExternalLink, Zap, Calendar, Menu, X, Settings, Clock, HelpCircle, ChevronDown, Check, Plus, FolderKanban } from 'lucide-react';
 import { EmitSettings, AiSettings } from '../types/timesheet';
 
 interface NavbarProps {
@@ -13,6 +13,8 @@ interface NavbarProps {
   activeTab: 'studio' | 'range' | 'bank' | 'connection';
   onTabChange: (tab: 'studio' | 'range' | 'bank' | 'connection') => void;
   activeSentencesCount: number;
+  selectedProjectTag: string;
+  onSelectProjectTag: (tag: string) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -25,8 +27,14 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeTab,
   onTabChange,
   activeSentencesCount,
+  selectedProjectTag,
+  onSelectProjectTag,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
+  const [isCustomTagInput, setIsCustomTagInput] = useState(false);
+  const [customTagValue, setCustomTagValue] = useState('');
+
   const isEmitConfigured = Boolean(emitSettings.token);
 
   const tabs: { id: 'studio' | 'range' | 'bank' | 'connection'; label: string; icon: React.FC<{ className?: string }> }[] = [
@@ -36,36 +44,149 @@ export const Navbar: React.FC<NavbarProps> = ({
     { id: 'connection', label: 'Connections', icon: ShieldCheck },
   ];
 
+  // Default preset projects
+  const defaultPresets = [
+    { tag: '#BLS', label: '#BLS (Bluestar Chillmaster)' },
+    { tag: '#ProjectManagement', label: '#ProjectManagement' },
+    { tag: '#Internal', label: '#Internal' },
+    { tag: '#Analytics', label: '#Analytics' },
+  ];
+
+  // Combine default presets with custom projects parsed from Emit Settings
+  const availableProjects = React.useMemo(() => {
+    const list = [...defaultPresets];
+    if (emitSettings.projects && emitSettings.projects.length > 0) {
+      emitSettings.projects.forEach(p => {
+        const cleanP = p.startsWith('#') ? p : `#${p}`;
+        if (!list.some(item => item.tag.toLowerCase() === cleanP.toLowerCase())) {
+          list.push({ tag: cleanP, label: cleanP });
+        }
+      });
+    }
+    return list;
+  }, [emitSettings.projects]);
+
+  const handleSelectPreset = (tag: string) => {
+    onSelectProjectTag(tag);
+    setIsProjectDropdownOpen(false);
+    setIsCustomTagInput(false);
+  };
+
+  const handleCustomSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (customTagValue.trim()) {
+      const clean = customTagValue.trim().startsWith('#') ? customTagValue.trim() : `#${customTagValue.trim()}`;
+      onSelectProjectTag(clean);
+      setCustomTagValue('');
+      setIsCustomTagInput(false);
+      setIsProjectDropdownOpen(false);
+    }
+  };
+
+  // Human readable label for active project tag
+  const activeProjectLabel = useMemo(() => {
+    const found = availableProjects.find(p => p.tag.toLowerCase() === selectedProjectTag.toLowerCase());
+    if (found) return found.label;
+    return `${selectedProjectTag}`;
+  }, [availableProjects, selectedProjectTag]);
+
   return (
     <header className="bg-[#07090e]/95 backdrop-blur-xl border-b border-white/[0.08] sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="h-16 sm:h-20 flex items-center justify-between gap-4">
           
-          {/* Left: Brand Logo & Workspace Subtitle */}
+          {/* Left: Bluestar Brand Logo & Workspace Dynamic Subtitle */}
           <div className="flex items-center space-x-3 shrink-0">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-indigo-600/25">
-              <Zap className="w-5 h-5 fill-current" />
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-600/30 border border-blue-400/20">
+              <Zap className="w-5 h-5 fill-current text-white" />
             </div>
             <div>
-              <h1 className="font-extrabold text-base text-white tracking-tight font-sans">
+              <h1 className="font-extrabold text-base text-white tracking-tight font-sans flex items-center">
                 Emit AutoSheet
               </h1>
-              <p className="text-[11px] text-slate-400 font-medium flex items-center space-x-1.5">
-                <span className="text-indigo-400 font-semibold">BLS (Bluestar) Chillmaster</span>
-                <span>&bull;</span>
-                <a
-                  href="https://app.emit.work/"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="inline-flex items-center text-slate-400 hover:text-indigo-300 transition-colors"
-                >
-                  app.emit.work <ExternalLink className="w-3 h-3 ml-1" />
-                </a>
-              </p>
+              
+              {/* Dynamic Project Selector Subtitle */}
+              <div className="relative">
+                <p className="text-[11px] text-slate-400 font-medium flex items-center space-x-1.5 mt-0.5">
+                  <button
+                    onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
+                    className="text-sky-400 hover:text-sky-300 font-semibold flex items-center px-1.5 py-0.5 rounded-md hover:bg-blue-950/50 border border-sky-500/20 transition-all group"
+                    title="Click to switch active project tag"
+                  >
+                    <FolderKanban className="w-3 h-3 mr-1 text-sky-400 group-hover:scale-110 transition-transform" />
+                    <span>{activeProjectLabel}</span>
+                    <ChevronDown className="w-3 h-3 ml-1 opacity-70" />
+                  </button>
+                  <span>&bull;</span>
+                  <a
+                    href="https://app.emit.work/"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center text-slate-400 hover:text-sky-300 transition-colors"
+                  >
+                    app.emit.work <ExternalLink className="w-3 h-3 ml-1" />
+                  </a>
+                </p>
+
+                {/* Project Selector Dropdown Menu */}
+                {isProjectDropdownOpen && (
+                  <div className="absolute left-0 top-full mt-2 w-64 glass-panel rounded-2xl p-2 border border-sky-500/30 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+                      Active Project Tag
+                    </div>
+
+                    <div className="space-y-0.5 max-h-48 overflow-y-auto scrollbar-none">
+                      {availableProjects.map(p => (
+                        <button
+                          key={p.tag}
+                          onClick={() => handleSelectPreset(p.tag)}
+                          className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-colors ${
+                            selectedProjectTag.toLowerCase() === p.tag.toLowerCase()
+                              ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                              : 'text-slate-300 hover:bg-slate-900 hover:text-white'
+                          }`}
+                        >
+                          <span className="truncate">{p.label}</span>
+                          {selectedProjectTag.toLowerCase() === p.tag.toLowerCase() && (
+                            <Check className="w-3.5 h-3.5 text-white ml-1 shrink-0" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Custom Tag Input */}
+                    <div className="pt-1 border-t border-slate-800 mt-1">
+                      {isCustomTagInput ? (
+                        <form onSubmit={handleCustomSubmit} className="flex items-center space-x-1 p-1">
+                          <input
+                            type="text"
+                            placeholder="#ProjectTag"
+                            value={customTagValue}
+                            onChange={e => setCustomTagValue(e.target.value)}
+                            className="w-full bg-slate-950 border border-sky-500/50 rounded-lg px-2 py-1 text-xs text-white focus:outline-none"
+                            autoFocus
+                          />
+                          <button type="submit" className="px-2 py-1 bg-blue-600 text-white rounded-lg text-xs font-bold">
+                            Save
+                          </button>
+                        </form>
+                      ) : (
+                        <button
+                          onClick={() => setIsCustomTagInput(true)}
+                          className="w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-semibold text-sky-400 hover:bg-blue-950/40 flex items-center"
+                        >
+                          <Plus className="w-3.5 h-3.5 mr-1.5" /> Add Custom Project Tag...
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
             </div>
           </div>
 
-          {/* Center: Desktop Navigation Tabs (Spacious & Un-cramped) */}
+          {/* Center: Desktop Navigation Tabs (Bluestar Royal Blue Theme) */}
           <nav className="hidden lg:flex items-center space-x-1 bg-[#0d121d] p-1.5 rounded-2xl border border-white/[0.08] shadow-inner">
             {tabs.map(t => {
               const Icon = t.icon;
@@ -81,7 +202,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   {isActive && (
                     <motion.div
                       layoutId="activeNavTab"
-                      className="absolute inset-0 bg-indigo-600 rounded-xl shadow-md shadow-indigo-600/30"
+                      className="absolute inset-0 bg-blue-600 rounded-xl shadow-md shadow-blue-600/35 border border-blue-400/20"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -97,11 +218,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Right: Actions Bar (Hours Counter & Status Badge) */}
           <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
             
-            {/* Hours Counter Pill */}
+            {/* Hours Counter Pill (Bluestar Blue) */}
             <div className="hidden sm:flex items-center space-x-2 bg-[#0d121d] px-3.5 py-2 rounded-2xl border border-white/[0.08] text-xs font-medium whitespace-nowrap">
-              <Clock className="w-4 h-4 text-indigo-400" />
+              <Clock className="w-4 h-4 text-sky-400" />
               <span className="text-slate-400 font-sans">Hours:</span>
-              <span className={`font-bold font-mono text-xs ${totalGeneratedHours >= targetHours ? 'text-emerald-400' : 'text-indigo-400'}`}>
+              <span className={`font-bold font-mono text-xs ${totalGeneratedHours >= targetHours ? 'text-emerald-400' : 'text-sky-400'}`}>
                 {totalGeneratedHours.toFixed(1)} / {targetHours}h
               </span>
             </div>
@@ -123,7 +244,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Help Button */}
             <button
               onClick={onOpenHelp}
-              className="p-2.5 rounded-2xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-indigo-400 hover:text-white transition-colors flex items-center justify-center font-bold text-xs"
+              className="p-2.5 rounded-2xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-sky-400 hover:text-white transition-colors flex items-center justify-center font-bold text-xs"
               title="Help & Complete User Guide"
             >
               <HelpCircle className="w-4 h-4" />
@@ -171,7 +292,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className={`w-full px-4 py-3 rounded-xl text-xs font-semibold flex items-center justify-between transition-colors ${
                   isActive
-                    ? 'bg-indigo-600 text-white'
+                    ? 'bg-blue-600 text-white'
                     : 'text-slate-300 hover:bg-slate-900'
                 }`}
               >

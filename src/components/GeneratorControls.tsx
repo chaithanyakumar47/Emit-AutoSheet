@@ -36,7 +36,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
         {/* 1. Target Hours Selector */}
         <div className="space-y-1.5">
           <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center">
-            <Clock className="w-3.5 h-3.5 mr-1.5 text-indigo-400" />
+            <Clock className="w-3.5 h-3.5 mr-1.5 text-sky-400" />
             Target Work Hours
           </label>
           <div className="flex items-center space-x-1 overflow-x-auto scrollbar-none pb-0.5">
@@ -48,7 +48,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
                   onClick={() => onChangeConfig({ ...config, targetHours: hrs })}
                   className={`flex-1 min-w-[42px] py-1.5 text-xs font-semibold rounded-lg transition-all ${
                     isSelected
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                       : 'bg-slate-950 text-slate-400 hover:text-slate-200 border border-slate-800'
                   }`}
                 >
@@ -62,41 +62,41 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
         {/* 2. Work Date Picker */}
         <div className="space-y-1.5">
           <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center">
-            <Calendar className="w-3.5 h-3.5 mr-1.5 text-indigo-400" />
+            <Calendar className="w-3.5 h-3.5 mr-1.5 text-sky-400" />
             Work Date
           </label>
           <input
             type="date"
             value={config.dateStr}
             onChange={e => onChangeConfig({ ...config, dateStr: e.target.value })}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-sans"
           />
         </div>
 
         {/* 3. Start Time Selector */}
         <div className="space-y-1.5">
           <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center">
-            <Clock className="w-3.5 h-3.5 mr-1.5 text-indigo-400" />
+            <Clock className="w-3.5 h-3.5 mr-1.5 text-sky-400" />
             Start Time
           </label>
           <input
             type="time"
             value={config.startTimeStr}
             onChange={e => onChangeConfig({ ...config, startTimeStr: e.target.value })}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-sans"
           />
         </div>
 
         {/* 4. Project Tag Selector */}
         <div className="space-y-1.5">
           <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center">
-            <Hash className="w-3.5 h-3.5 mr-1.5 text-indigo-400" />
+            <Hash className="w-3.5 h-3.5 mr-1.5 text-sky-400" />
             Project Tag
           </label>
           <select
             value={config.defaultProjectTag || '#BLS'}
             onChange={e => onChangeConfig({ ...config, defaultProjectTag: e.target.value })}
-            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+            className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-sans"
           >
             {allProjects.map(p => (
               <option key={p} value={p}>{p}</option>
@@ -115,7 +115,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
           className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 font-medium text-xs flex items-center justify-center transition-all hover:border-slate-700"
           title="Randomize task sequence and regenerate timeline"
         >
-          <Shuffle className="w-3.5 h-3.5 mr-2 text-indigo-400" />
+          <Shuffle className="w-3.5 h-3.5 mr-2 text-sky-400" />
           Shuffle Tasks
         </button>
 
@@ -123,7 +123,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
         <div className="flex items-center space-x-2 w-full sm:w-auto">
           <button
             onClick={onGenerate}
-            className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98]"
+            className="flex-1 sm:flex-none px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98]"
           >
             <Play className="w-4 h-4 mr-2 fill-current" />
             Generate Timesheet
@@ -132,7 +132,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
           <button
             onClick={onApplyAiPolish}
             disabled={isPolishing}
-            className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30 flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
+            className="flex-1 sm:flex-none px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-xs shadow-lg shadow-blue-600/30 flex items-center justify-center transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50"
           >
             <Sparkles className={`w-4 h-4 mr-2 ${isPolishing ? 'animate-spin' : ''}`} />
             {isPolishing ? 'Polishing...' : 'AI Polish'}
