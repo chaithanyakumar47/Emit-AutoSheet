@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer-core');
 
 (async () => {
-  console.log('🚀 Starting Automated Headless Chrome Help Modal Test...');
+  console.log('🚀 Starting Automated Headless Chrome Excel Import Button Test...');
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/google-chrome',
     headless: true,
@@ -14,17 +14,18 @@ const puppeteer = require('puppeteer-core');
   console.log('Navigating to http://localhost:3001/ ...');
   await page.goto('http://localhost:3001/', { waitUntil: 'networkidle2' });
 
-  // Click the ? Help button in header
-  console.log('Clicking ? Help button...');
+  // Click Sentence Bank tab
+  console.log('Clicking "Sentence Bank" tab...');
   await page.evaluate(() => {
-    const helpBtn = document.querySelector('button[title="Help & Complete User Guide"]');
-    if (helpBtn) helpBtn.click();
+    const buttons = Array.from(document.querySelectorAll('button'));
+    const btn = buttons.find(b => b.textContent.includes('Sentence Bank'));
+    if (btn) btn.click();
   });
   await new Promise(r => setTimeout(r, 1000));
 
-  const helpScreenshot = '/home/chaithanya/.gemini/antigravity/brain/e693f0b6-9241-43cc-9ec3-9a9b87e2ae48/help_modal_test.png';
-  await page.screenshot({ path: helpScreenshot, fullPage: false });
-  console.log(`📸 Help Modal Screenshot saved to: ${helpScreenshot}`);
+  const screenshot = '/home/chaithanya/.gemini/antigravity/brain/e693f0b6-9241-43cc-9ec3-9a9b87e2ae48/excel_import_test.png';
+  await page.screenshot({ path: screenshot, fullPage: false });
+  console.log(`📸 Excel Import UI Screenshot saved to: ${screenshot}`);
 
   await browser.close();
   console.log('Browser closed cleanly.');

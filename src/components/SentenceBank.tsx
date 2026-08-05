@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { SentenceItem, Category } from '../types/timesheet';
-import { Search, Plus, Edit2, Check, X, Tag, Sparkles, Trash2, Layers } from 'lucide-react';
+import { Search, Plus, Edit2, Check, X, Tag, Sparkles, Trash2, Layers, FileUp, FileSpreadsheet } from 'lucide-react';
+import { parseExcelFileToSentences } from '../utils/excelImporter';
 
 interface SentenceBankProps {
   sentences: SentenceItem[];
   onUpdateSentence: (sentence: SentenceItem) => void;
   onAddSentence: (sentence: SentenceItem) => void;
+  onImportSentences?: (sentences: SentenceItem[]) => void;
   onDeleteSentence: (id: string) => void;
   onDeleteAllSentences: () => void;
   onFetchEmitSuggestions?: () => void;
+  addToast?: (type: 'success' | 'error' | 'info', message: string) => void;
 }
 
 const CATEGORIES: Category[] = [
@@ -47,9 +50,11 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
   sentences,
   onUpdateSentence,
   onAddSentence,
+  onImportSentences,
   onDeleteSentence,
   onDeleteAllSentences,
   onFetchEmitSuggestions,
+  addToast,
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -58,6 +63,9 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [newText, setNewText] = useState('');
   const [newCategory, setNewCategory] = useState<Category>('RequirementGathering');
+  const [isImporting, setIsImporting] = useState(false);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const filteredSentences = sentences.filter(s => {
     const matchesSearch = s.text.toLowerCase().includes(searchTerm.toLowerCase()) || s.tags.some(t => t.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -94,9 +102,47 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
     setIsAddingNew(false);
   };
 
+  const handleFileImportChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsImporting(true);
+    try {
+      const importedItems = await parseExcelFileToSentences(file);
+      setIsImporting(false);
+
+      if (importedItems.length === 0) {
+        if (addToast) addToast('error', 'No valid sentence rows found in the Excel file.');
+        return;
+      }
+
+      if (onImportSentences) {
+        onImportSentences(importedItems);
+      } else {
+        importedItems.forEach(item => onAddSentence(item));
+      }
+
+      if (addToast) addToast('success', `Imported ${importedItems.length} task sentences from Excel!`);
+    } catch (err: any) {
+      setIsImporting(false);
+      if (addToast) addToast('error', `Excel import failed: ${err.message || err}`);
+    }
+
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
   return (
     <div className="panel-surface rounded-2xl p-4 sm:p-6 shadow-xl flex flex-col h-full space-y-4">
       
+      {/* Hidden File Input for Excel Import */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileImportChange}
+        accept=".xlsx,.xls,.csv,.tsv"
+        className="hidden"
+      />
+
       {/* Header & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -120,6 +166,16 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
               AI Suggest
             </button>
           )}
+
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isImporting}
+            className="px-3 py-1.5 rounded-xl bg-emerald-950/50 border border-emerald-800/60 text-emerald-300 font-semibold text-xs flex items-center transition-colors hover:bg-emerald-900/60 shadow-md shadow-emerald-950/40 disabled:opacity-50"
+            title="Import task sentences from Excel (.xlsx, .csv)"
+          >
+            <FileSpreadsheet className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
+            {isImporting ? 'Importing...' : 'Import Excel (.xlsx)'}
+          </button>
 
           <button
             onClick={onDeleteAllSentences}

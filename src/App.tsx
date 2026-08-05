@@ -146,6 +146,10 @@ export const App: React.FC = () => {
     addToast('success', 'Custom sentence added to bank!');
   };
 
+  const handleImportSentences = (importedList: SentenceItem[]) => {
+    setSentences(prev => [...importedList, ...prev]);
+  };
+
   const handleTriggerEmitSuggestions = async () => {
     setIsSuggestionsModalOpen(true);
     setIsAnalyzingHistory(true);
@@ -316,9 +320,11 @@ export const App: React.FC = () => {
               sentences={sentences}
               onUpdateSentence={handleUpdateSentence}
               onAddSentence={handleAddSentence}
+              onImportSentences={handleImportSentences}
               onDeleteSentence={handleDeleteSentence}
               onDeleteAllSentences={handleDeleteAllSentences}
               onFetchEmitSuggestions={handleTriggerEmitSuggestions}
+              addToast={addToast}
             />
           </motion.div>
         )}
