@@ -9,6 +9,7 @@ import {
 } from '../utils/dateRangeUtils';
 import { generateMultiDayTimesheets } from '../utils/multiDayGenerator';
 import { dispatchToEmitApi, fetchEmitActivities, deleteEmitActivity, deleteEmitActivitiesBatch } from '../utils/emitIntegration';
+import { AuditCleanupModal } from './AuditCleanupModal';
 import {
   Calendar,
   Sparkles,
@@ -26,6 +27,7 @@ import {
   Check,
   Plus,
   Sliders,
+  ShieldAlert,
 } from 'lucide-react';
 
 interface DateRangeStudioProps {
@@ -57,6 +59,9 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
   const [isFetching, setIsFetching] = useState(false);
   const [fetchedActivities, setFetchedActivities] = useState<any[]>([]);
+
+  // Audit Modal State
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
 
   // Generated Multi-Day Gap Fill State: Record<dateStr, GeneratedActivity[]>
   const [filledDayActivities, setFilledDayActivities] = useState<Record<string, GeneratedActivity[]>>({});
@@ -354,14 +359,23 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             </label>
           </div>
 
-          <div className="flex items-end">
+          <div className="flex items-end space-x-2">
             <button
               onClick={handleAnalyzeRange}
               disabled={isFetching}
-              className="w-full py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/20 flex items-center justify-center transition-all disabled:opacity-50"
+              className="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center transition-all disabled:opacity-50"
             >
               <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isFetching ? 'animate-spin' : ''}`} />
-              {isFetching ? 'Fetching Range...' : 'Fetch & Detect Gaps'}
+              {isFetching ? 'Fetching...' : 'Fetch & Detect Gaps'}
+            </button>
+
+            <button
+              onClick={() => setIsAuditModalOpen(true)}
+              className="px-3 py-2.5 bg-rose-950/60 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center transition-all shrink-0"
+              title="Audit Mistakes & Batch Cleanup (Filled Weekends, Duplicates)"
+            >
+              <ShieldAlert className="w-3.5 h-3.5 mr-1.5 text-rose-400" />
+              Audit Mistakes
             </button>
           </div>
         </div>
@@ -745,6 +759,16 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
           </div>
         </div>
       )}
+
+      {/* Audit & Batch Cleanup Modal */}
+      <AuditCleanupModal
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
+        fetchedActivities={fetchedActivities}
+        emitSettings={emitSettings}
+        onRefresh={handleAnalyzeRange}
+        addToast={addToast}
+      />
 
     </div>
   );

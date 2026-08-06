@@ -4,7 +4,7 @@ export interface DayGapStatus {
   isWeekend: boolean;
   loggedHours: number;
   targetHours: number;
-  status: 'fully_logged' | 'partial' | 'missing_gap';
+  status: 'fully_logged' | 'partial' | 'missing_gap' | 'weekend';
   activities: any[];
 }
 
@@ -135,8 +135,10 @@ export function analyzeDateRangeGaps(
       status = 'partial';
       partialDaysCount++;
     } else {
-      status = 'missing_gap';
-      if (!isWeekend || includeWeekends) {
+      if (isWeekend && !includeWeekends) {
+        status = 'weekend' as any;
+      } else {
+        status = 'missing_gap';
         missingDaysCount++;
       }
     }
