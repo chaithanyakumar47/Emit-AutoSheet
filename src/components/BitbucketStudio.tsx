@@ -3,7 +3,7 @@ import { SentenceItem, GeneratorConfig, EmitSettings, BitbucketSettings, Generat
 import { getDatePresetRange, parseIsoToDate } from '../utils/dateRangeUtils';
 import { fetchBitbucketRepos, fetchBitbucketCommits, BitbucketRepo } from '../utils/bitbucketIntegration';
 import { balanceCommitsAcrossDateRange, BalancedDayResult } from '../utils/commitBalancer';
-import { dispatchToEmitApi } from '../utils/emitIntegration';
+import { dispatchToEmitApi, fetchEmitActivities } from '../utils/emitIntegration';
 import {
   GitCommit,
   GitBranch,
@@ -107,12 +107,15 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
     }
 
     setIsFetchingCommits(true);
-    const commitRes = await fetchBitbucketCommits(
-      bitbucketSettings,
-      loadedRepos.length > 0 ? activeRepos : [{ slug: 'repo', name: 'repo', workspace: bitbucketSettings.workspaces || 'ws', mainBranch: 'main' }],
-      startDateStr,
-      endDateStr
-    );
+    const [commitRes, emitHistRes] = await Promise.all([
+      fetchBitbucketCommits(
+        bitbucketSettings,
+        loadedRepos.length > 0 ? activeRepos : [{ slug: 'repo', name: 'repo', workspace: bitbucketSettings.workspaces || 'ws', mainBranch: 'main' }],
+        startDateStr,
+        endDateStr
+      ),
+      fetchEmitActivities(emitSettings, 50),
+    ]);
     setIsFetchingCommits(false);
 
     if (!commitRes.success && loadedRepos.length > 0) {
@@ -142,7 +145,8 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
       commitRes.commits || [],
       sentences,
       bulkConfig,
-      includeWeekends
+      includeWeekends,
+      emitHistRes.activities || []
     );
 
     setBalancedDays(balanced);
@@ -372,14 +376,14 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
                 sourceBadge = (
                   <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-purple-950 text-purple-300 border border-purple-800 flex items-center">
                     <Sparkles className="w-3 h-3 mr-1 text-purple-400" />
-                    Balanced Overflow ({day.activities.length} Tasks)
+                    Spread Commits ({day.activities.length} Tasks)
                   </span>
                 );
-              } else if (day.source === 'ai_fill') {
+              } else if (day.source === 'emit_history') {
                 sourceBadge = (
-                  <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center" title="Filled zero-commit gap day leaving out (CM-number) ticket IDs">
+                  <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center" title="Filled zero-commit gap day from past Emit history leaving out (CM-number) ticket IDs">
                     <Sparkles className="w-3 h-3 mr-1 text-emerald-400" />
-                    AI Fill (No Ticket ID)
+                    Emit History (No Ticket ID)
                   </span>
                 );
               } else if (day.isCompanyHoliday) {
