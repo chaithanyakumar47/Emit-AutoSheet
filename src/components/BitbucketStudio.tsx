@@ -3,7 +3,7 @@ import { SentenceItem, GeneratorConfig, EmitSettings, BitbucketSettings, Generat
 import { getDatePresetRange, parseIsoToDate } from '../utils/dateRangeUtils';
 import { fetchBitbucketRepos, fetchBitbucketCommits, BitbucketRepo } from '../utils/bitbucketIntegration';
 import { balanceCommitsAcrossDateRange, BalancedDayResult } from '../utils/commitBalancer';
-import { dispatchToEmitApi, fetchEmitActivities } from '../utils/emitIntegration';
+import { dispatchToEmitApi, fetchEmitActivities, deleteEmitActivitiesForDate } from '../utils/emitIntegration';
 import {
   GitCommit,
   GitBranch,
@@ -23,6 +23,7 @@ import {
   Square,
   ShieldCheck,
   Zap,
+  Trash2,
 } from 'lucide-react';
 
 interface BitbucketStudioProps {
@@ -458,21 +459,40 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
                   {day.activities.length > 0 && (
                     <div className="flex items-center justify-between pt-1">
                       <span className="text-xs font-mono font-bold text-slate-400">Total: {day.totalHours}h</span>
-                      <button
-                        onClick={async () => {
-                          addToast('info', `Submitting Developer Day ${day.dateStr}...`);
-                          const res = await dispatchToEmitApi(day.activities, emitSettings, day.dateStr);
-                          if (res.successCount > 0) {
-                            addToast('success', `Posted ${res.successCount} Developer entries for ${day.dateStr}!`);
-                          } else {
-                            addToast('error', `Failed to post for ${day.dateStr}`);
-                          }
-                        }}
-                        className="px-3 py-1.5 text-xs font-semibold text-emerald-300 bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-800/60 rounded-xl flex items-center transition-colors"
-                      >
-                        <Send className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
-                        Submit Day
-                      </button>
+                      <div className="flex items-center space-x-1.5">
+                        <button
+                          onClick={async () => {
+                            if (!confirm(`Delete all activities posted on Emit for ${day.dateStr}?`)) return;
+                            addToast('info', `Deleting entries for ${day.dateStr} from Emit...`);
+                            const res = await deleteEmitActivitiesForDate(day.dateStr, emitSettings);
+                            if (res.successCount > 0) {
+                              addToast('success', `Deleted ${res.successCount} entries for ${day.dateStr} from Emit!`);
+                            } else {
+                              addToast('info', res.logs[0] || `No entries found to delete for ${day.dateStr}`);
+                            }
+                          }}
+                          className="p-1.5 text-xs font-semibold text-rose-400 bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/60 rounded-xl flex items-center transition-colors"
+                          title={`Delete posted entries for ${day.dateStr} from Emit`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          onClick={async () => {
+                            addToast('info', `Submitting Developer Day ${day.dateStr}...`);
+                            const res = await dispatchToEmitApi(day.activities, emitSettings, day.dateStr);
+                            if (res.successCount > 0) {
+                              addToast('success', `Posted ${res.successCount} Developer entries for ${day.dateStr}!`);
+                            } else {
+                              addToast('error', `Failed to post for ${day.dateStr}`);
+                            }
+                          }}
+                          className="px-3 py-1.5 text-xs font-semibold text-emerald-300 bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-800/60 rounded-xl flex items-center transition-colors"
+                        >
+                          <Send className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
+                          Submit Day
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

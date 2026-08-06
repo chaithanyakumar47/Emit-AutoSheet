@@ -16,6 +16,7 @@ import { DateRangeStudio } from './components/DateRangeStudio';
 import { BitbucketStudio } from './components/BitbucketStudio';
 import { SettingsModal } from './components/SettingsModal';
 import { HelpModal } from './components/HelpModal';
+import { AuditCleanupModal } from './components/AuditCleanupModal';
 import { ToastContainer, ToastMessage } from './components/Toast';
 import { HelpCircle } from 'lucide-react';
 
@@ -81,6 +82,7 @@ export const App: React.FC = () => {
   // Modals & Toasts
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
   const [isAiModalOpen, setIsAiModalOpen] = useState(false);
   const [isSuggestionsModalOpen, setIsSuggestionsModalOpen] = useState(false);
   const [suggestedSentences, setSuggestedSentences] = useState<SentenceItem[]>([]);
@@ -263,6 +265,7 @@ export const App: React.FC = () => {
         aiSettings={aiSettings}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenHelp={() => setIsHelpOpen(true)}
+        onOpenAuditModal={() => setIsAuditModalOpen(true)}
         totalGeneratedHours={totalGeneratedHours}
         targetHours={config.targetHours}
         activeTab={activeTab}
@@ -432,6 +435,15 @@ export const App: React.FC = () => {
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
         onOpenSettings={() => setIsSettingsOpen(true)}
+      />
+
+      <AuditCleanupModal
+        isOpen={isAuditModalOpen}
+        onClose={() => setIsAuditModalOpen(false)}
+        fetchedActivities={[]}
+        emitSettings={emitSettings}
+        onRefresh={() => {}}
+        addToast={addToast}
       />
 
       {/* Floating Bottom-Right Help Button */}

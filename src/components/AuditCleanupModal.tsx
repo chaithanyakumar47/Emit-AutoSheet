@@ -41,9 +41,29 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteProgress, setDeleteProgress] = useState({ current: 0, total: 0, msg: '' });
 
+  const [selfActivities, setSelfActivities] = useState<any[]>([]);
+  const [isSelfFetching, setIsSelfFetching] = useState(false);
+
+  // Auto fetch activities from Emit when modal opens if parent didn't pass pre-fetched activities
+  React.useEffect(() => {
+    if (isOpen && fetchedActivities.length === 0 && emitSettings.token) {
+      setIsSelfFetching(true);
+      import('../utils/emitIntegration').then(({ fetchEmitActivities }) => {
+        fetchEmitActivities(emitSettings, 100).then(res => {
+          setIsSelfFetching(false);
+          if (res.success && res.activities) {
+            setSelfActivities(res.activities);
+          }
+        });
+      });
+    }
+  }, [isOpen, fetchedActivities.length, emitSettings.token]);
+
+  const activeActivities = fetchedActivities.length > 0 ? fetchedActivities : selfActivities;
+
   // Map activities with date metadata & Karma company holidays
   const parsedActivities = useMemo(() => {
-    return fetchedActivities.map(act => {
+    return activeActivities.map(act => {
       let dateObj = new Date();
       if (act.date) {
         dateObj = typeof act.date === 'number' ? new Date(act.date) : new Date(act.date);

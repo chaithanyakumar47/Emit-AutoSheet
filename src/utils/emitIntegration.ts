@@ -227,6 +227,26 @@ export async function deleteEmitActivitiesBatch(
 }
 
 /**
+ * Delete all activities logged on a specific date from Emit
+ */
+export async function deleteEmitActivitiesForDate(
+  dateStr: string,
+  settings: EmitSettings,
+  onProgress?: (current: number, total: number, msg: string) => void
+): Promise<{ successCount: number; failedCount: number; logs: string[] }> {
+  const startMs = new Date(`${dateStr}T00:00:00`).getTime();
+  const endMs = new Date(`${dateStr}T23:59:59`).getTime();
+
+  const fetchRes = await fetchEmitActivities(settings, 50, startMs, endMs);
+  if (!fetchRes.success || fetchRes.activities.length === 0) {
+    return { successCount: 0, failedCount: 0, logs: [`No logged activities found on Emit for ${dateStr}.`] };
+  }
+
+  const ids = fetchRes.activities.map((a: any) => a._id || a.id).filter(Boolean);
+  return deleteEmitActivitiesBatch(ids, settings, onProgress);
+}
+
+/**
  * Generate Console Script to delete activities on app.emit.work tab
  */
 export function generateDeleteConsoleScript(

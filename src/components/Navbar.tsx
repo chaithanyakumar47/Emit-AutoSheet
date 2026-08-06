@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Layers, BookOpen, ExternalLink, Zap, Calendar, Menu, X, Settings, Clock, HelpCircle, ChevronDown, Check, Plus, FolderKanban } from 'lucide-react';
+import { ShieldCheck, Layers, BookOpen, ExternalLink, Zap, Calendar, Menu, X, Settings, Clock, HelpCircle, ChevronDown, Check, Plus, FolderKanban, Trash2 } from 'lucide-react';
 import { EmitSettings, AiSettings } from '../types/timesheet';
 
 import { FolderGit2 } from 'lucide-react';
@@ -10,6 +10,7 @@ interface NavbarProps {
   aiSettings: AiSettings;
   onOpenSettings: () => void;
   onOpenHelp: () => void;
+  onOpenAuditModal?: () => void;
   totalGeneratedHours: number;
   targetHours: number;
   activeTab: 'studio' | 'range' | 'bank' | 'bitbucket' | 'connection';
@@ -24,6 +25,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   aiSettings,
   onOpenSettings,
   onOpenHelp,
+  onOpenAuditModal,
   totalGeneratedHours,
   targetHours,
   activeTab,
@@ -234,6 +236,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               <ShieldCheck className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isEmitConfigured ? 'text-emerald-400' : 'text-amber-400'}`} />
               <span className="hidden sm:inline">{isEmitConfigured ? 'Token Connected' : 'Setup Token'}</span>
             </button>
+
+            {/* Audit / Delete Mistakes Button */}
+            {onOpenAuditModal && (
+              <button
+                onClick={onOpenAuditModal}
+                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-950/40 text-rose-300 border border-rose-800/60 hover:bg-rose-900/60 transition-colors flex items-center shrink-0"
+                title="Audit & Batch Delete Mistakes / Holidays from Emit"
+              >
+                <Trash2 className="w-3.5 h-3.5 mr-1.5 text-rose-400" />
+                <span className="hidden sm:inline">Audit / Delete</span>
+              </button>
+            )}
 
             {/* Settings Gear Button */}
             <button
