@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer-core');
 
 (async () => {
-  console.log('🚀 Starting Automated Headless Chrome Bitbucket Developer Studio Test...');
+  console.log('🚀 Starting Automated Headless Chrome Balanced Navbar Test...');
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/google-chrome',
     headless: true,
@@ -14,18 +14,9 @@ const puppeteer = require('puppeteer-core');
   console.log('Navigating to http://localhost:3000/ ...');
   await page.goto('http://localhost:3000/', { waitUntil: 'networkidle2' });
 
-  // Click Bitbucket Developer Studio tab
-  console.log('Clicking "Bitbucket Developer Studio" tab...');
-  await page.evaluate(() => {
-    const buttons = Array.from(document.querySelectorAll('button'));
-    const btn = buttons.find(b => b.textContent.includes('Bitbucket Developer Studio'));
-    if (btn) btn.click();
-  });
-  await new Promise(r => setTimeout(r, 1000));
-
-  const screenshot = '/home/chaithanya/.gemini/antigravity/brain/e693f0b6-9241-43cc-9ec3-9a9b87e2ae48/bitbucket_developer_studio_test.png';
+  const screenshot = '/home/chaithanya/.gemini/antigravity/brain/e693f0b6-9241-43cc-9ec3-9a9b87e2ae48/balanced_navbar_layout_test.png';
   await page.screenshot({ path: screenshot, fullPage: false });
-  console.log(`📸 Bitbucket Developer Studio Screenshot saved to: ${screenshot}`);
+  console.log(`📸 Balanced Navbar Screenshot saved to: ${screenshot}`);
 
   await browser.close();
   console.log('Browser closed cleanly.');

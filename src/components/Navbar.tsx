@@ -40,9 +40,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   const isEmitConfigured = Boolean(emitSettings.token);
 
   const tabs: { id: 'studio' | 'range' | 'bank' | 'bitbucket' | 'connection'; label: string; icon: React.FC<{ className?: string }> }[] = [
-    { id: 'studio', label: 'Timesheet Studio', icon: Layers },
-    { id: 'range', label: 'Bulk Range & Gaps', icon: Calendar },
-    { id: 'bitbucket', label: 'Bitbucket Developer Studio', icon: FolderGit2 },
+    { id: 'studio', label: 'Studio', icon: Layers },
+    { id: 'range', label: 'Bulk Range', icon: Calendar },
+    { id: 'bitbucket', label: 'Bitbucket Dev', icon: FolderGit2 },
     { id: 'bank', label: `Sentence Bank (${activeSentencesCount})`, icon: BookOpen },
     { id: 'connection', label: 'Connections', icon: ShieldCheck },
   ];
@@ -218,36 +218,27 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Right: Actions Bar (Hours Counter & Status Badge) */}
-          <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+          {/* Right: Actions Bar (Status Badge & Quick Action Buttons) */}
+          <div className="flex items-center space-x-2 shrink-0">
             
-            {/* Hours Counter Pill (Bluestar Blue) */}
-            <div className="hidden sm:flex items-center space-x-2 bg-[#0d121d] px-3.5 py-2 rounded-2xl border border-white/[0.08] text-xs font-medium whitespace-nowrap">
-              <Clock className="w-4 h-4 text-sky-400" />
-              <span className="text-slate-400 font-sans">Hours:</span>
-              <span className={`font-bold font-mono text-xs ${totalGeneratedHours >= targetHours ? 'text-emerald-400' : 'text-sky-400'}`}>
-                {totalGeneratedHours.toFixed(1)} / {targetHours}h
-              </span>
-            </div>
-
             {/* Token Status Badge */}
             <button
               onClick={onOpenSettings}
-              className={`px-3.5 py-2 rounded-2xl text-xs font-semibold flex items-center transition-all border whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all border whitespace-nowrap ${
                 isEmitConfigured
                   ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60 hover:bg-emerald-900/50'
                   : 'bg-amber-950/40 text-amber-300 border-amber-800/60 hover:bg-amber-900/50 animate-pulse'
               }`}
               title="Connections Settings"
             >
-              <ShieldCheck className={`w-4 h-4 mr-1.5 shrink-0 ${isEmitConfigured ? 'text-emerald-400' : 'text-amber-400'}`} />
+              <ShieldCheck className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isEmitConfigured ? 'text-emerald-400' : 'text-amber-400'}`} />
               <span className="hidden sm:inline">{isEmitConfigured ? 'Token Connected' : 'Setup Token'}</span>
             </button>
 
             {/* Help Button */}
             <button
               onClick={onOpenHelp}
-              className="p-2.5 rounded-2xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-sky-400 hover:text-white transition-colors flex items-center justify-center font-bold text-xs"
+              className="p-2 rounded-xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-sky-400 hover:text-white transition-colors flex items-center justify-center font-bold text-xs"
               title="Help & Complete User Guide"
             >
               <HelpCircle className="w-4 h-4" />
@@ -256,7 +247,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Settings Gear Button */}
             <button
               onClick={onOpenSettings}
-              className="p-2.5 rounded-2xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-slate-300 hover:text-white transition-colors"
+              className="p-2 rounded-xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-slate-300 hover:text-white transition-colors"
               title="Settings"
             >
               <Settings className="w-4 h-4" />
@@ -265,7 +256,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Mobile Navigation Drawer Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2.5 rounded-2xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-slate-300 transition-colors"
+              className="lg:hidden p-2 rounded-xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-slate-300 transition-colors"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
