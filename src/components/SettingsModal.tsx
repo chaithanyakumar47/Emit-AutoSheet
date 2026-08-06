@@ -42,6 +42,27 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   const [bbDisplayName, setBbDisplayName] = useState(bitbucketSettings?.displayName || '');
   const [bbCommitEmails, setBbCommitEmails] = useState(bitbucketSettings?.commitEmails || '');
   const [bbScanAllBranches, setBbScanAllBranches] = useState(bitbucketSettings?.scanAllBranches ?? true);
+  // Sync local input states whenever modal opens or props update
+  React.useEffect(() => {
+    if (isOpen) {
+      setToken(emitSettings.token || '');
+      setCookie(emitSettings.cookie || '');
+      setTeamId(emitSettings.teamId || '63fdbb709d73d3f19fb4f72d');
+      setProfileJson(emitSettings.profileJson || '');
+      setAutoFetchUrl(emitSettings.autoFetchUrl || '');
+
+      setAiProvider(aiSettings.provider || 'built-in');
+      setApiKey(aiSettings.apiKey || '');
+
+      setBbEmail(bitbucketSettings?.email || '');
+      setBbApiToken(bitbucketSettings?.apiToken || '');
+      setBbWorkspaces(bitbucketSettings?.workspaces || '');
+      setBbDisplayName(bitbucketSettings?.displayName || '');
+      setBbCommitEmails(bitbucketSettings?.commitEmails || '');
+      setBbScanAllBranches(bitbucketSettings?.scanAllBranches ?? true);
+    }
+  }, [isOpen, emitSettings, aiSettings, bitbucketSettings]);
+
   const [isTestingBb, setIsTestingBb] = useState(false);
 
   // Parse profile JSON (supports Emit auth response or full activity creation payload)
