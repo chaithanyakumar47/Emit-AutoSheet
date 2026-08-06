@@ -3,6 +3,8 @@ import { motion } from 'framer-motion';
 import { ShieldCheck, Layers, BookOpen, ExternalLink, Zap, Calendar, Menu, X, Settings, Clock, HelpCircle, ChevronDown, Check, Plus, FolderKanban } from 'lucide-react';
 import { EmitSettings, AiSettings } from '../types/timesheet';
 
+import { FolderGit2 } from 'lucide-react';
+
 interface NavbarProps {
   emitSettings: EmitSettings;
   aiSettings: AiSettings;
@@ -10,8 +12,8 @@ interface NavbarProps {
   onOpenHelp: () => void;
   totalGeneratedHours: number;
   targetHours: number;
-  activeTab: 'studio' | 'range' | 'bank' | 'connection';
-  onTabChange: (tab: 'studio' | 'range' | 'bank' | 'connection') => void;
+  activeTab: 'studio' | 'range' | 'bank' | 'bitbucket' | 'connection';
+  onTabChange: (tab: 'studio' | 'range' | 'bank' | 'bitbucket' | 'connection') => void;
   activeSentencesCount: number;
   selectedProjectTag: string;
   onSelectProjectTag: (tag: string) => void;
@@ -37,9 +39,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const isEmitConfigured = Boolean(emitSettings.token);
 
-  const tabs: { id: 'studio' | 'range' | 'bank' | 'connection'; label: string; icon: React.FC<{ className?: string }> }[] = [
+  const tabs: { id: 'studio' | 'range' | 'bank' | 'bitbucket' | 'connection'; label: string; icon: React.FC<{ className?: string }> }[] = [
     { id: 'studio', label: 'Timesheet Studio', icon: Layers },
     { id: 'range', label: 'Bulk Range & Gaps', icon: Calendar },
+    { id: 'bitbucket', label: 'Bitbucket Developer Studio', icon: FolderGit2 },
     { id: 'bank', label: `Sentence Bank (${activeSentencesCount})`, icon: BookOpen },
     { id: 'connection', label: 'Connections', icon: ShieldCheck },
   ];

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SentenceItem, GeneratedActivity, GeneratorConfig, EmitSettings, AiSettings } from './types/timesheet';
+import { SentenceItem, GeneratedActivity, GeneratorConfig, EmitSettings, AiSettings, BitbucketSettings } from './types/timesheet';
 import { DEFAULT_SENTENCES } from './data/defaultSentences';
 import { generateTimesheet } from './utils/timesheetGenerator';
 import { polishActivitiesWithAI, generateSuggestionsFromHistory } from './utils/aiOptimizer';
@@ -13,6 +13,7 @@ import { EmitIntegrationPanel } from './components/EmitIntegrationPanel';
 import { AIPolishModal } from './components/AIPolishModal';
 import { EmitSuggestionsModal } from './components/EmitSuggestionsModal';
 import { DateRangeStudio } from './components/DateRangeStudio';
+import { BitbucketStudio } from './components/BitbucketStudio';
 import { SettingsModal } from './components/SettingsModal';
 import { HelpModal } from './components/HelpModal';
 import { ToastContainer, ToastMessage } from './components/Toast';
@@ -61,8 +62,21 @@ export const App: React.FC = () => {
     return saved ? JSON.parse(saved) : { provider: 'built-in', apiKey: '', model: 'llama-3.1-8b-instant', tone: 'professional', autoPolishOnGenerate: false };
   });
 
+  const [bitbucketSettings, setBitbucketSettings] = useState<BitbucketSettings>(() => {
+    const saved = localStorage.getItem('emit_bitbucket_settings');
+    return saved ? JSON.parse(saved) : {
+      email: '',
+      apiToken: '',
+      workspaces: '',
+      displayName: '',
+      commitEmails: '',
+      scanAllBranches: true,
+      selectedRepos: [],
+    };
+  });
+
   // Active navigation tab
-  const [activeTab, setActiveTab] = useState<'studio' | 'range' | 'bank' | 'connection'>('studio');
+  const [activeTab, setActiveTab] = useState<'studio' | 'range' | 'bank' | 'bitbucket' | 'connection'>('studio');
 
   // Modals & Toasts
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -97,8 +111,12 @@ export const App: React.FC = () => {
   }, [emitSettings]);
 
   useEffect(() => {
-    localStorage.setItem('ai_settings', JSON.stringify(aiSettings));
-  }, [aiSettings]);
+    localStorage.setItem('emit_bitbucket_settings', JSON.stringify(bitbucketSettings));
+  }, [bitbucketSettings]);
+
+  const handleUpdateBitbucketSettings = (newSettings: BitbucketSettings) => {
+    setBitbucketSettings(newSettings);
+  };
 
   // Initial auto-generation on load
   useEffect(() => {
@@ -318,7 +336,27 @@ export const App: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Tab 3: Sentence Bank */}
+        {/* Tab 3: Bitbucket Developer Studio */}
+        {activeTab === 'bitbucket' && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.2 }}
+            className="max-w-6xl mx-auto"
+          >
+            <BitbucketStudio
+              sentences={sentences}
+              config={config}
+              emitSettings={emitSettings}
+              bitbucketSettings={bitbucketSettings}
+              onUpdateBitbucketSettings={setBitbucketSettings}
+              onOpenSettings={() => setIsSettingsOpen(true)}
+              addToast={addToast}
+            />
+          </motion.div>
+        )}
+
+        {/* Tab 4: Sentence Bank */}
         {activeTab === 'bank' && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -339,7 +377,7 @@ export const App: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Tab 3: Connections & Settings */}
+        {/* Tab 5: Connections & Settings */}
         {activeTab === 'connection' && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -384,8 +422,10 @@ export const App: React.FC = () => {
         onClose={() => setIsSettingsOpen(false)}
         emitSettings={emitSettings}
         aiSettings={aiSettings}
+        bitbucketSettings={bitbucketSettings}
         onSaveEmitSettings={setEmitSettings}
         onSaveAiSettings={setAiSettings}
+        onSaveBitbucketSettings={setBitbucketSettings}
       />
 
       <HelpModal

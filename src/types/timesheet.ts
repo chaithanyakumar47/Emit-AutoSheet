@@ -81,10 +81,33 @@ export interface AiSettings {
   autoPolishOnGenerate: boolean;
 }
 
+export interface BitbucketSettings {
+  email: string;
+  apiToken: string;
+  workspaces: string;
+  displayName: string;
+  commitEmails: string;
+  scanAllBranches: boolean;
+  selectedRepos: string[];
+}
+
+export interface BitbucketCommit {
+  hash: string;
+  author: string;
+  dateStr: string; // YYYY-MM-DD
+  epochMs: number;
+  rawMessage: string;
+  cleanMessage: string;
+  ticketId?: string;
+  repoSlug: string;
+  branchName?: string;
+}
+
 export interface AppState {
   sentences: SentenceItem[];
   generatedActivities: GeneratedActivity[];
   config: GeneratorConfig;
   emitSettings: EmitSettings;
   aiSettings: AiSettings;
+  bitbucketSettings?: BitbucketSettings;
 }
