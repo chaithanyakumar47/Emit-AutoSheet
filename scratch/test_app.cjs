@@ -1,7 +1,7 @@
 const puppeteer = require('puppeteer-core');
 
 (async () => {
-  console.log('🚀 Starting Automated Headless Chrome Audit Modal Test...');
+  console.log('🚀 Starting Automated Headless Chrome Fixed Action Buttons Test...');
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/google-chrome',
     headless: true,
@@ -23,18 +23,9 @@ const puppeteer = require('puppeteer-core');
   });
   await new Promise(r => setTimeout(r, 1000));
 
-  // Click Audit Mistakes button
-  console.log('Clicking "Audit Mistakes" button...');
-  await page.evaluate(() => {
-    const buttons = Array.from(document.querySelectorAll('button'));
-    const btn = buttons.find(b => b.textContent.includes('Audit Mistakes'));
-    if (btn) btn.click();
-  });
-  await new Promise(r => setTimeout(r, 1000));
-
-  const screenshot = '/home/chaithanya/.gemini/antigravity/brain/e693f0b6-9241-43cc-9ec3-9a9b87e2ae48/audit_cleanup_modal_test.png';
+  const screenshot = '/home/chaithanya/.gemini/antigravity/brain/e693f0b6-9241-43cc-9ec3-9a9b87e2ae48/fixed_action_buttons_test.png';
   await page.screenshot({ path: screenshot, fullPage: false });
-  console.log(`📸 Audit Cleanup Modal Screenshot saved to: ${screenshot}`);
+  console.log(`📸 Fixed Action Buttons Screenshot saved to: ${screenshot}`);
 
   await browser.close();
   console.log('Browser closed cleanly.');

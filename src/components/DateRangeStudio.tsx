@@ -277,7 +277,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
         </div>
 
         {/* Inputs Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 pt-3 border-t border-slate-800/80">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-3 border-t border-slate-800/80">
           <div>
             <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
               Start Date
@@ -286,7 +286,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
               type="date"
               value={startDateStr}
               onChange={e => setStartDateStr(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-sans"
             />
           </div>
 
@@ -298,7 +298,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
               type="date"
               value={endDateStr}
               onChange={e => setEndDateStr(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-indigo-500 font-sans"
+              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-sans"
             />
           </div>
 
@@ -314,7 +314,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                   onClick={() => setTargetHoursPerDay(hrs)}
                   className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                     targetHoursPerDay === hrs
-                      ? 'bg-indigo-600 text-white shadow-md'
+                      ? 'bg-blue-600 text-white shadow-md'
                       : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'
                   }`}
                 >
@@ -326,14 +326,14 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
           {/* Bulk Tasks per Day Selector */}
           <div>
-            <label className="text-[11px] font-semibold text-purple-400 uppercase tracking-wider block mb-1 flex items-center">
+            <label className="text-[11px] font-semibold text-sky-400 uppercase tracking-wider block mb-1 flex items-center">
               <Sliders className="w-3 h-3 mr-1" />
               Tasks / Day
             </label>
             <select
               value={String(targetTaskCountPerDay)}
               onChange={e => setTargetTaskCountPerDay(e.target.value === 'auto' ? 'auto' : Number(e.target.value))}
-              className="w-full bg-slate-950 border border-purple-800/60 rounded-xl px-2.5 py-2 text-xs text-purple-300 focus:outline-none focus:border-purple-500 font-sans font-semibold"
+              className="w-full bg-slate-950 border border-sky-800/60 rounded-xl px-2.5 py-2 text-xs text-sky-300 focus:outline-none focus:border-sky-500 font-sans font-semibold"
             >
               <option value="auto">Auto (Varied)</option>
               <option value="1">1 Task / Day</option>
@@ -353,31 +353,32 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                 type="checkbox"
                 checked={includeWeekends}
                 onChange={e => setIncludeWeekends(e.target.checked)}
-                className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-indigo-600 focus:ring-indigo-500"
+                className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-blue-600 focus:ring-blue-500"
               />
-              <span>Include Weekends</span>
+              <span className="whitespace-nowrap">Include Weekends</span>
             </label>
           </div>
+        </div>
 
-          <div className="flex items-end space-x-2">
-            <button
-              onClick={handleAnalyzeRange}
-              disabled={isFetching}
-              className="flex-1 py-2.5 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center transition-all disabled:opacity-50"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${isFetching ? 'animate-spin' : ''}`} />
-              {isFetching ? 'Fetching...' : 'Fetch & Detect Gaps'}
-            </button>
+        {/* Dedicated Action Row for Un-cramped Buttons */}
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-3 border-t border-slate-800/80">
+          <button
+            onClick={handleAnalyzeRange}
+            disabled={isFetching}
+            className="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center transition-all disabled:opacity-50 whitespace-nowrap"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
+            {isFetching ? 'Fetching Range...' : 'Fetch & Detect Gaps'}
+          </button>
 
-            <button
-              onClick={() => setIsAuditModalOpen(true)}
-              className="px-3 py-2.5 bg-rose-950/60 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center transition-all shrink-0"
-              title="Audit Mistakes & Batch Cleanup (Filled Weekends, Duplicates)"
-            >
-              <ShieldAlert className="w-3.5 h-3.5 mr-1.5 text-rose-400" />
-              Audit Mistakes
-            </button>
-          </div>
+          <button
+            onClick={() => setIsAuditModalOpen(true)}
+            className="w-full sm:w-auto px-4 py-2.5 bg-rose-950/60 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center transition-all whitespace-nowrap"
+            title="Audit Mistakes & Batch Cleanup (Filled Weekends, Duplicates)"
+          >
+            <ShieldAlert className="w-3.5 h-3.5 mr-2 text-rose-400" />
+            Audit Mistakes
+          </button>
         </div>
       </div>
 
