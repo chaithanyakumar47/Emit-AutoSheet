@@ -59,8 +59,15 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
   const [isSubmittingBulk, setIsSubmittingBulk] = useState(false);
   const [bulkStatusMsg, setBulkStatusMsg] = useState('');
 
+  // Auto load repositories on mount if API token is configured
+  React.useEffect(() => {
+    if (bitbucketSettings.apiToken && loadedRepos.length === 0 && !isLoadingRepos) {
+      handleLoadRepos();
+    }
+  }, [bitbucketSettings.apiToken]);
+
   // 1. Load Bitbucket Repositories
-  const handleLoadRepos = async () => {
+  const handleLoadRepos = async (): Promise<BitbucketRepo[]> => {
     setIsLoadingRepos(true);
     const res = await fetchBitbucketRepos(bitbucketSettings);
     setIsLoadingRepos(false);
@@ -68,11 +75,14 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
     if (res.success) {
       setLoadedRepos(res.repos);
       if (selectedRepoSlugs.length === 0 && res.repos.length > 0) {
-        setSelectedRepoSlugs(res.repos.map(r => r.slug));
+        const allSlugs = res.repos.map(r => r.slug);
+        setSelectedRepoSlugs(allSlugs);
+        onUpdateBitbucketSettings({ ...bitbucketSettings, selectedRepos: allSlugs });
       }
-      addToast('success', `Loaded ${res.repos.length} Bitbucket repositories!`);
+      return res.repos;
     } else {
       addToast('error', res.error || 'Failed to load Bitbucket repos.');
+      return [];
     }
   };
 
@@ -100,9 +110,20 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
       return;
     }
 
-    const activeRepos = loadedRepos.filter(r => selectedRepoSlugs.includes(r.slug));
-    if (activeRepos.length === 0 && loadedRepos.length > 0) {
-      addToast('error', 'Please select at least 1 repository.');
+    let reposToFetch = loadedRepos;
+
+    // If repos not loaded yet, fetch them now
+    if (reposToFetch.length === 0) {
+      reposToFetch = await handleLoadRepos();
+    }
+
+    let activeRepos = reposToFetch.filter(r => selectedRepoSlugs.includes(r.slug));
+    if (activeRepos.length === 0) {
+      activeRepos = reposToFetch; // default to all repos if none explicitly selected
+    }
+
+    if (activeRepos.length === 0) {
+      addToast('error', 'No Bitbucket repositories available to fetch commits from.');
       return;
     }
 
@@ -110,7 +131,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
     const [commitRes, emitHistRes] = await Promise.all([
       fetchBitbucketCommits(
         bitbucketSettings,
-        loadedRepos.length > 0 ? activeRepos : [{ slug: 'repo', name: 'repo', workspace: bitbucketSettings.workspaces || 'ws', mainBranch: 'main' }],
+        activeRepos,
         startDateStr,
         endDateStr
       ),
