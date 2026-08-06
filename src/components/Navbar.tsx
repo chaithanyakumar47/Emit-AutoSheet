@@ -97,8 +97,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           
           {/* Left: Bluestar Brand Logo & Workspace Dynamic Subtitle */}
           <div className="flex items-center space-x-3 shrink-0">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-700 via-blue-600 to-sky-500 flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-blue-600/30 border border-blue-400/20">
-              <Zap className="w-5 h-5 fill-current text-white" />
+            <div className="w-10 h-10 rounded-2xl overflow-hidden shadow-lg shadow-blue-600/40 border border-sky-400/30 bg-black/80 flex items-center justify-center p-0.5 group hover:scale-105 transition-transform">
+              <img src="/assets/emitus_logo.png" alt="Emitus Logo" className="w-full h-full object-contain rounded-xl" />
             </div>
             <div>
               <h1 className="font-extrabold text-base text-white tracking-tight font-sans flex items-center">
