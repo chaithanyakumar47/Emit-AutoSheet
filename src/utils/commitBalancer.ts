@@ -175,7 +175,7 @@ export function balanceCommitsAcrossDateRange(
       activities = activities.map(a => ({
         ...a,
         rawText: stripJiraTicket(a.rawText),
-        polishedText: stripJiraTicket(a.polishedText),
+        polishedText: stripJiraTicket(a.polishedText || a.rawText),
       }));
     }
 

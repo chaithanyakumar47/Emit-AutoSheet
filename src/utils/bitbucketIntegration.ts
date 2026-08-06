@@ -23,10 +23,11 @@ export function extractJiraTicket(msg: string): string | undefined {
  */
 export function stripJiraTicket(msg: string): string {
   if (!msg) return '';
-  // Remove leading or inline ticket patterns like (CM-123) or CM-123:
   const cleaned = msg
-    .replace(/^\s*\(?[A-Z]{2,10}-\d+\)?[:\s\-]*/i, '') // Leading (CM-123) or CM-123:
-    .replace(/^\s*\[?[A-Z]{2,10}-\d+\]?[:\s\-]*/i, '') // Leading [CM-123]
+    .replace(/\(?\[?([A-Z]{2,10}-\d+)[\]\)]?/gi, '') // Globally strip (CM-1234), [CM-1234], CM-1234
+    .replace(/^#\w+\s+#\w+\s*/, '') // Strip leading hashtags like #BLS #FrontendDevelopment if present in raw text
+    .replace(/\s*:\s*/g, ': ')
+    .replace(/\s+/g, ' ')
     .trim();
   return cleaned || msg.trim();
 }
