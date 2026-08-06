@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { EmitSettings } from '../types/timesheet';
 import { deleteEmitActivitiesBatch } from '../utils/emitIntegration';
+import { getCompanyHolidayInfo } from '../data/companyHolidays';
 import {
   AlertTriangle,
   Trash2,
@@ -11,8 +12,8 @@ import {
   RefreshCw,
   Search,
   Calendar,
-  CheckCircle2,
   ShieldAlert,
+  PartyPopper,
 } from 'lucide-react';
 
 interface AuditCleanupModalProps {
@@ -24,7 +25,7 @@ interface AuditCleanupModalProps {
   addToast: (type: 'success' | 'error' | 'info', message: string) => void;
 }
 
-type FilterType = 'all' | 'weekends' | 'duplicates';
+type FilterType = 'all' | 'weekends' | 'holidays' | 'duplicates';
 
 export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
   isOpen,
@@ -40,7 +41,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteProgress, setDeleteProgress] = useState({ current: 0, total: 0, msg: '' });
 
-  // Map activities with date metadata
+  // Map activities with date metadata & Karma company holidays
   const parsedActivities = useMemo(() => {
     return fetchedActivities.map(act => {
       let dateObj = new Date();
@@ -53,11 +54,15 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
       const dayOfWeek = !isNaN(dateObj.getTime()) ? dateObj.toLocaleDateString('en-US', { weekday: 'short' }) : '';
       const cleanDesc = (act.description || act.rawText || '').replace(/^#\w+\s+#\w+\s*/, '').trim();
 
+      const holidayInfo = getCompanyHolidayInfo(dateStr);
+
       return {
         ...act,
         dateStr,
         dayOfWeek,
         isWeekend,
+        isCompanyHoliday: holidayInfo.isHoliday,
+        holidayName: holidayInfo.name,
         cleanDesc,
       };
     });
@@ -89,6 +94,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
     return parsedActivities.filter(act => {
       // 1. Category Filter
       if (filterType === 'weekends' && !act.isWeekend) return false;
+      if (filterType === 'holidays' && !act.isCompanyHoliday) return false;
       if (filterType === 'duplicates' && !duplicateIdSet.has(act._id)) return false;
 
       // 2. Search Query
@@ -96,8 +102,9 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
         const q = searchQuery.toLowerCase();
         const matchDesc = act.cleanDesc.toLowerCase().includes(q);
         const matchDate = act.dateStr.includes(q);
+        const matchHoliday = (act.holidayName || '').toLowerCase().includes(q);
         const matchTag = (act.tags || []).some((t: string) => t.toLowerCase().includes(q));
-        if (!matchDesc && !matchDate && !matchTag) return false;
+        if (!matchDesc && !matchDate && !matchTag && !matchHoliday) return false;
       }
 
       return true;
@@ -155,6 +162,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
   if (!isOpen) return null;
 
   const weekendCount = parsedActivities.filter(a => a.isWeekend).length;
+  const holidayCount = parsedActivities.filter(a => a.isCompanyHoliday).length;
   const duplicateCount = duplicateIdSet.size;
 
   return (
@@ -172,7 +180,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                 Audit &amp; Batch Cleanup Inspector
               </h3>
               <p className="text-xs text-slate-400">
-                Detect mistaken weekend entries or duplicates and delete them from Emit in 1 click.
+                Detect mistaken weekend entries, Karma company holidays, or duplicates and delete them from Emit in 1 click.
               </p>
             </div>
           </div>
@@ -187,7 +195,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
           
           {/* Preset Category Pills */}
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="flex items-center space-x-1.5">
+            <div className="flex items-center space-x-1.5 flex-wrap gap-y-1.5">
               <button
                 onClick={() => setFilterType('weekends')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all ${
@@ -198,6 +206,18 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
               >
                 <AlertTriangle className="w-3.5 h-3.5 mr-1.5" />
                 Filled Weekends ({weekendCount})
+              </button>
+
+              <button
+                onClick={() => setFilterType('holidays')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all ${
+                  filterType === 'holidays'
+                    ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
+                    : 'bg-slate-950 text-purple-300 border border-purple-900/60 hover:text-white'
+                }`}
+              >
+                <PartyPopper className="w-3.5 h-3.5 mr-1.5" />
+                Company Holidays ({holidayCount})
               </button>
 
               <button
@@ -244,7 +264,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
             <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-500" />
             <input
               type="text"
-              placeholder="Search by description, date (YYYY-MM-DD), or tag..."
+              placeholder="Search by description, date (YYYY-MM-DD), holiday name, or tag..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
@@ -282,11 +302,17 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                     </button>
 
                     <div className="min-w-0 space-y-0.5">
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 flex-wrap gap-y-1">
                         <span className="text-xs font-bold text-white flex items-center">
                           <Calendar className="w-3 h-3 mr-1 text-slate-400" />
                           {act.dateStr} ({act.dayOfWeek})
                         </span>
+                        {act.isCompanyHoliday && (
+                          <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-purple-950 text-purple-300 border border-purple-800/80 flex items-center">
+                            <PartyPopper className="w-2.5 h-2.5 mr-1 text-purple-400" />
+                            {act.holidayName || 'Company Holiday'}
+                          </span>
+                        )}
                         {act.isWeekend && (
                           <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-rose-950 text-rose-400 border border-rose-800/80">
                             Weekend

@@ -1,10 +1,14 @@
+import { getCompanyHolidayInfo } from '../data/companyHolidays';
+
 export interface DayGapStatus {
   dateStr: string; // YYYY-MM-DD
   dayOfWeek: string; // Mon, Tue, etc.
   isWeekend: boolean;
+  isCompanyHoliday: boolean;
+  holidayName?: string;
   loggedHours: number;
   targetHours: number;
-  status: 'fully_logged' | 'partial' | 'missing_gap' | 'weekend';
+  status: 'fully_logged' | 'partial' | 'missing_gap' | 'weekend' | 'holiday';
   activities: any[];
 }
 
@@ -16,6 +20,7 @@ export interface RangeSummary {
   missingDaysCount: number;
   partialDaysCount: number;
   fullyLoggedDaysCount: number;
+  holidayDaysCount: number;
   totalLoggedHours: number;
   totalTargetHours: number;
   days: DayGapStatus[];
@@ -90,6 +95,7 @@ export function analyzeDateRangeGaps(
   let missingDaysCount = 0;
   let partialDaysCount = 0;
   let fullyLoggedDaysCount = 0;
+  let holidayDaysCount = 0;
 
   // Group fetched activities by date (YYYY-MM-DD)
   const activitiesByDate: Record<string, any[]> = {};
@@ -113,8 +119,11 @@ export function analyzeDateRangeGaps(
     const dayNum = curr.getDay();
     const isWeekend = dayNum === 0 || dayNum === 6;
     const dayOfWeek = curr.toLocaleDateString('en-US', { weekday: 'short' });
+    const holidayInfo = getCompanyHolidayInfo(dStr);
+    const isCompanyHoliday = holidayInfo.isHoliday;
+    const holidayName = holidayInfo.name;
 
-    if (!isWeekend || includeWeekends) {
+    if ((!isWeekend || includeWeekends) && !isCompanyHoliday) {
       workingDays++;
       totalTargetHours += targetDailyHours;
     }
@@ -134,19 +143,22 @@ export function analyzeDateRangeGaps(
     } else if (dayLoggedHours > 0) {
       status = 'partial';
       partialDaysCount++;
+    } else if (isCompanyHoliday) {
+      status = 'holiday';
+      holidayDaysCount++;
+    } else if (isWeekend && !includeWeekends) {
+      status = 'weekend';
     } else {
-      if (isWeekend && !includeWeekends) {
-        status = 'weekend' as any;
-      } else {
-        status = 'missing_gap';
-        missingDaysCount++;
-      }
+      status = 'missing_gap';
+      missingDaysCount++;
     }
 
     days.push({
       dateStr: dStr,
       dayOfWeek,
       isWeekend,
+      isCompanyHoliday,
+      holidayName,
       loggedHours: dayLoggedHours,
       targetHours: targetDailyHours,
       status,
@@ -164,6 +176,7 @@ export function analyzeDateRangeGaps(
     missingDaysCount,
     partialDaysCount,
     fullyLoggedDaysCount,
+    holidayDaysCount,
     totalLoggedHours: Number(totalLoggedHours.toFixed(2)),
     totalTargetHours: Number(totalTargetHours.toFixed(2)),
     days,

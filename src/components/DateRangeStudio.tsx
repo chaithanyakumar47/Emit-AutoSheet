@@ -482,6 +482,20 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                   Partial ({day.loggedHours}h / {day.targetHours}h)
                 </span>
               );
+            } else if (day.status === 'holiday') {
+              cardBorder = 'border-purple-800/50 bg-purple-950/10';
+              statusBadge = (
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-purple-950/60 text-purple-300 border border-purple-800/60 flex items-center truncate max-w-[140px]" title={day.holidayName}>
+                  🎉 {day.holidayName || 'Holiday'}
+                </span>
+              );
+            } else if (day.status === 'weekend') {
+              cardBorder = 'border-slate-800/60 bg-slate-950/30';
+              statusBadge = (
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-slate-900 text-slate-400 border border-slate-800 flex items-center">
+                  Weekend
+                </span>
+              );
             }
 
             return (
