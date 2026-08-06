@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { HelpCircle, X, ShieldCheck, Layers, Calendar, BookOpen, Send, Sparkles, Key, Zap, CheckCircle2, ChevronRight } from 'lucide-react';
+import { HelpCircle, X, ShieldCheck, Layers, Calendar, BookOpen, Send, Sparkles, Key, Zap, CheckCircle2, ChevronRight, FolderGit2, ShieldAlert, PartyPopper } from 'lucide-react';
 
 interface HelpModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
   onClose,
   onOpenSettings,
 }) => {
-  const [activeSection, setActiveSection] = useState<'quickstart' | 'connection' | 'studio' | 'range' | 'bank'>('quickstart');
+  const [activeSection, setActiveSection] = useState<'quickstart' | 'connection' | 'studio' | 'range' | 'bitbucket' | 'audit' | 'bank'>('quickstart');
 
   if (!isOpen) return null;
 
@@ -21,7 +21,9 @@ export const HelpModal: React.FC<HelpModalProps> = ({
     { id: 'connection', label: '🔑 Step 1: Connect to Emit', icon: ShieldCheck },
     { id: 'studio', label: '⏱️ Step 2: Daily Timesheet Studio', icon: Layers },
     { id: 'range', label: '📅 Step 3: Bulk Range & Gap Filling', icon: Calendar },
-    { id: 'bank', label: '📚 Step 4: Sentence Bank & AI Suggest', icon: BookOpen },
+    { id: 'bitbucket', label: '💻 Step 4: Bitbucket Developer Mode', icon: FolderGit2 },
+    { id: 'audit', label: '🛡️ Step 5: Audit Mistakes & Holidays', icon: ShieldAlert },
+    { id: 'bank', label: '📚 Step 6: Sentence Bank & AI Suggest', icon: BookOpen },
   ];
 
   return (
@@ -36,7 +38,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-white font-sans">Emitus &bull; Complete User Guide</h3>
-              <p className="text-xs text-slate-400">Everything you need to know to automate your daily &amp; bulk timesheets.</p>
+              <p className="text-xs text-slate-400">Everything you need to know to automate your daily &amp; developer timesheets.</p>
             </div>
           </div>
 
@@ -59,7 +61,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                   onClick={() => setActiveSection(sec.id as any)}
                   className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-all shrink-0 whitespace-nowrap md:whitespace-normal text-left ${
                     isActive
-                      ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
                       : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
                   }`}
                 >
@@ -80,29 +82,29 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             {activeSection === 'quickstart' && (
               <div className="space-y-4 text-xs leading-relaxed">
                 <h4 className="text-sm font-bold text-white flex items-center">
-                  <Zap className="w-4 h-4 mr-2 text-indigo-400" />
+                  <Zap className="w-4 h-4 mr-2 text-sky-400" />
                   Quick Start Overview
                 </h4>
                 <p className="text-slate-300">
-                  Emitus automates your daily work activity timesheets for <code className="text-indigo-300">app.emit.work</code>. It generates realistic, randomized task breakdowns mapped to your real project tags (`#BLS`, `#BackendDevelopment`, etc.), polishes them using AI, and dispatches them to Emit in 1 click!
+                  Emitus automates work activity timesheets for <code className="text-sky-300">app.emit.work</code> for Business Analysts, Project Managers, Testers, and Software Developers. It maps real project tags (`#BLS`), pulls Bitbucket commits, polishes tasks using AI, and dispatches timesheets in 1 click!
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
                   <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                    <span className="font-bold text-indigo-300 text-xs">1. Setup Token</span>
-                    <p className="text-[11px] text-slate-400">Paste your raw JWT Token in Settings to authorize direct posting to Emit.</p>
+                    <span className="font-bold text-sky-300 text-xs">1. Setup Token</span>
+                    <p className="text-[11px] text-slate-400">Paste your JWT Token in Settings to authorize direct posting to Emit.</p>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                    <span className="font-bold text-purple-300 text-xs">2. Generate &amp; AI Polish</span>
-                    <p className="text-[11px] text-slate-400">Build a 7.5h timeline and polish task descriptions with executive language.</p>
+                    <span className="font-bold text-purple-300 text-xs">2. Bitbucket Dev Mode</span>
+                    <p className="text-[11px] text-slate-400">Pull Bitbucket commits, balance overflow tasks, and auto-fill gap days.</p>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
                     <span className="font-bold text-emerald-300 text-xs">3. 1-Click Dispatch</span>
                     <p className="text-[11px] text-slate-400">Submit directly via API, Console Script, or Browser Bookmarklet.</p>
                   </div>
                   <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                    <span className="font-bold text-amber-300 text-xs">4. Bulk Range Gap Fill</span>
-                    <p className="text-[11px] text-slate-400">Select a date range (e.g. This Week), detect missing days, and fill all gaps at once!</p>
+                    <span className="font-bold text-amber-300 text-xs">4. Audit &amp; Cleanup</span>
+                    <p className="text-[11px] text-slate-400">Detect mistaken weekend/holiday entries or duplicates and batch delete them.</p>
                   </div>
                 </div>
 
@@ -112,7 +114,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                       onClose();
                       onOpenSettings();
                     }}
-                    className="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-md shadow-indigo-600/30 transition-all flex items-center"
+                    className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all flex items-center"
                   >
                     <Key className="w-3.5 h-3.5 mr-2" />
                     Open Connections Settings Now
@@ -131,19 +133,15 @@ export const HelpModal: React.FC<HelpModalProps> = ({
 
                 <div className="space-y-3">
                   <div className="p-4 rounded-xl bg-slate-900/80 border border-slate-800 space-y-2">
-                    <h5 className="font-bold text-indigo-300 text-xs">How to get your Emit Auth Token:</h5>
+                    <h5 className="font-bold text-sky-300 text-xs">How to get your Emit Auth Token:</h5>
                     <ol className="list-decimal list-inside space-y-1.5 text-slate-300 text-[11px]">
-                      <li>Open <a href="https://app.emit.work" target="_blank" rel="noreferrer" className="text-indigo-400 underline">app.emit.work</a> in Google Chrome or Edge and log in.</li>
-                      <li>Press <kbd className="px-1.5 py-0.5 bg-slate-950 rounded text-indigo-300 border border-slate-800">F12</kbd> (or right click -&gt; Inspect) to open Chrome DevTools.</li>
+                      <li>Open <a href="https://app.emit.work" target="_blank" rel="noreferrer" className="text-sky-400 underline">app.emit.work</a> in Google Chrome or Edge and log in.</li>
+                      <li>Press <kbd className="px-1.5 py-0.5 bg-slate-950 rounded text-sky-300 border border-slate-800">F12</kbd> (or right click -&gt; Inspect) to open Chrome DevTools.</li>
                       <li>Click the <strong>Network</strong> tab.</li>
                       <li>Log an activity or refresh the page on Emit. Look for a network request named <code>activity</code> or <code>list_activities</code>.</li>
                       <li>Click the request, scroll to <strong>Request Headers</strong>, and copy the value of the <code>Token:</code> header (e.g. <code>eyJhbGci...</code>).</li>
                       <li>Paste it into the <strong>Settings Modal</strong> in this app!</li>
                     </ol>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 text-[11px]">
-                    💡 <strong>Pro Tip:</strong> You can also copy your entire raw request headers from DevTools and paste them into the "Paste Raw Request Headers" box in Settings &mdash; the app will automatically extract your Token and Cookie!
                   </div>
                 </div>
               </div>
@@ -153,13 +151,13 @@ export const HelpModal: React.FC<HelpModalProps> = ({
             {activeSection === 'studio' && (
               <div className="space-y-4 text-xs leading-relaxed">
                 <h4 className="text-sm font-bold text-white flex items-center">
-                  <Layers className="w-4 h-4 mr-2 text-indigo-400" />
+                  <Layers className="w-4 h-4 mr-2 text-sky-400" />
                   Step 2: Timesheet Studio (Daily Activity Logging)
                 </h4>
 
                 <div className="space-y-2.5">
                   <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                    <span className="font-bold text-indigo-300">1. Target Hours &amp; Start Time</span>
+                    <span className="font-bold text-sky-300">1. Target Hours &amp; Start Time</span>
                     <p className="text-slate-400 text-[11px]">Select your target work hours (7.5h is standard) and start time (e.g. 09:30). Choose your project tag (`#BLS`).</p>
                   </div>
 
@@ -169,13 +167,8 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                   </div>
 
                   <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                    <span className="font-bold text-indigo-300">3. AI Executive Polish</span>
-                    <p className="text-slate-400 text-[11px]">Click <strong>AI Polish</strong> to transform simple sentences into executive-ready descriptions (e.g. <em>"Professional &amp; Executive"</em> tone).</p>
-                  </div>
-
-                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
-                    <span className="font-bold text-emerald-300">4. Dispatch to Emit</span>
-                    <p className="text-slate-400 text-[11px]">Use <strong>Submit All to Emit API</strong> to post entries directly. Alternatively, use <strong>Console Script</strong> or <strong>Bookmarklet</strong> if testing manually.</p>
+                    <span className="font-bold text-emerald-300">3. Dispatch to Emit</span>
+                    <p className="text-slate-400 text-[11px]">Use <strong>Submit All to Emit API</strong> to post entries directly.</p>
                   </div>
                 </div>
               </div>
@@ -194,22 +187,83 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                 </p>
 
                 <ol className="list-decimal list-inside space-y-2 text-[11px] text-slate-300">
-                  <li>Click the <strong>Bulk Range &amp; Gaps</strong> tab in the top navigation bar.</li>
+                  <li>Click the <strong>Bulk Range</strong> tab in the top navigation bar.</li>
                   <li>Choose a Date Range preset (*This Week*, *Last Week*, *This Month*) or pick Start/End dates.</li>
-                  <li>Click <strong>Fetch &amp; Detect Gaps</strong>. The app scans Emit to populate your <strong>Calendar Matrix</strong>.</li>
-                  <li>Review the day cards (🟢 Fully Logged, 🟡 Partial Hours, 🔴 Missing Gap).</li>
-                  <li>Click <strong>Auto-Fill (N Gaps)</strong> to generate varied task timelines across all missing days.</li>
+                  <li>Click <strong>Fetch &amp; Detect Gaps</strong>.</li>
+                  <li>Click <strong>Auto-Fill Gaps</strong> to generate varied task timelines across missing days.</li>
                   <li>Click <strong>Bulk Submit Range</strong> to post all filled timesheets to Emit sequentially!</li>
                 </ol>
               </div>
             )}
 
-            {/* Step 4: Sentence Bank & AI Suggest */}
+            {/* Step 4: Bitbucket Developer Mode */}
+            {activeSection === 'bitbucket' && (
+              <div className="space-y-4 text-xs leading-relaxed">
+                <h4 className="text-sm font-bold text-white flex items-center">
+                  <FolderGit2 className="w-4 h-4 mr-2 text-sky-400" />
+                  Step 4: Bitbucket Developer Mode &amp; Commit Balancer
+                </h4>
+
+                <p className="text-slate-300">
+                  Built specifically for Software Developers! Connect your Bitbucket repositories to automatically generate timesheets directly from your Git commit log.
+                </p>
+
+                <div className="space-y-2.5 text-[11px]">
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                    <span className="font-bold text-sky-300">1. Configure Bitbucket Credentials</span>
+                    <p className="text-slate-400">Open Settings &rarr; Bitbucket Integration. Enter your Atlassian Email and App Password / Token.</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                    <span className="font-bold text-purple-300">2. Load Repos &amp; Fetch Commits</span>
+                    <p className="text-slate-400">Click <strong>Load Bitbucket Repos</strong> to discover your active repositories. Pick your repos, select your date range, and click <strong>Fetch Commits &amp; Balance</strong>.</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                    <span className="font-bold text-emerald-300">3. Smart Commit Balancing &amp; Ticket ID Exclusion</span>
+                    <p className="text-slate-400">If a day has heavy commits (6+), extra commits are automatically shifted to adjacent zero-commit days. For remaining zero-commit days, AI auto-fills activities while <strong>leaving out ticket numbers like `(CM-1234)`</strong>!</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 5: Audit Mistakes & Holidays */}
+            {activeSection === 'audit' && (
+              <div className="space-y-4 text-xs leading-relaxed">
+                <h4 className="text-sm font-bold text-white flex items-center">
+                  <ShieldAlert className="w-4 h-4 mr-2 text-rose-400" />
+                  Step 5: Audit Mistakes &amp; Karma Company Holidays
+                </h4>
+
+                <p className="text-slate-300">
+                  Detect mistaken weekend entries, official Karma company holidays, or duplicate activities and batch delete them directly from Emit.
+                </p>
+
+                <div className="space-y-2.5 text-[11px]">
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                    <span className="font-bold text-rose-300">1. Open Audit Inspector</span>
+                    <p className="text-slate-400">Click the red <strong>Audit Mistakes</strong> button in the Bulk Range Studio.</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                    <span className="font-bold text-amber-300">2. Filter Mistakes</span>
+                    <p className="text-slate-400">Filter by <strong>Filled Weekends</strong>, <strong>Company Holidays</strong> (Good Friday, Diwali, Christmas, etc.), or <strong>Duplicates</strong>.</p>
+                  </div>
+
+                  <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800 space-y-1">
+                    <span className="font-bold text-emerald-300">3. 1-Click Batch Delete</span>
+                    <p className="text-slate-400">Select the mistaken entries and click <strong>Delete Selected (N Entries)</strong> to clean them up from Emit in seconds!</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Step 6: Sentence Bank & AI Suggest */}
             {activeSection === 'bank' && (
               <div className="space-y-4 text-xs leading-relaxed">
                 <h4 className="text-sm font-bold text-white flex items-center">
                   <BookOpen className="w-4 h-4 mr-2 text-amber-400" />
-                  Step 4: Sentence Bank &amp; AI Suggestions
+                  Step 6: Sentence Bank &amp; AI Suggestions
                 </h4>
 
                 <p className="text-slate-300">
@@ -220,11 +274,6 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                   <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
                     <span className="font-bold text-purple-300 block mb-0.5">✨ AI Suggest Feature:</span>
                     Click <strong>AI Suggest</strong> in the Sentence Bank. The app fetches your actual past Emit activities and suggests new custom sentence templates tailored to your work history!
-                  </div>
-
-                  <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800">
-                    <span className="font-bold text-indigo-300 block mb-0.5">✏️ Custom Tasks &amp; Deletion:</span>
-                    Add new custom tasks with the <strong>Add Task</strong> button. Delete unwanted sentences using individual trash icons or <strong>Delete All</strong>.
                   </div>
                 </div>
               </div>
@@ -239,7 +288,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
           <p className="text-[11px] text-slate-400 hidden sm:block">Need help? Open Settings to test your token connection.</p>
           <button
             onClick={onClose}
-            className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 transition-all ml-auto"
+            className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all ml-auto"
           >
             Got it, thanks!
           </button>

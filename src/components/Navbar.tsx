@@ -235,15 +235,6 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="hidden sm:inline">{isEmitConfigured ? 'Token Connected' : 'Setup Token'}</span>
             </button>
 
-            {/* Help Button */}
-            <button
-              onClick={onOpenHelp}
-              className="p-2 rounded-xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-sky-400 hover:text-white transition-colors flex items-center justify-center font-bold text-xs"
-              title="Help & Complete User Guide"
-            >
-              <HelpCircle className="w-4 h-4" />
-            </button>
-
             {/* Settings Gear Button */}
             <button
               onClick={onOpenSettings}
