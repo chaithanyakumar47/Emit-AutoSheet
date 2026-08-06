@@ -102,7 +102,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
             <div>
               <h1 className="font-extrabold text-base text-white tracking-tight font-sans flex items-center">
-                Emit AutoSheet
+                Emitus
               </h1>
               
               {/* Dynamic Project Selector Subtitle */}

@@ -35,7 +35,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
               <HelpCircle className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white font-sans">Emit AutoSheet &bull; Complete User Guide</h3>
+              <h3 className="text-base font-bold text-white font-sans">Emitus &bull; Complete User Guide</h3>
               <p className="text-xs text-slate-400">Everything you need to know to automate your daily &amp; bulk timesheets.</p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export const HelpModal: React.FC<HelpModalProps> = ({
                   Quick Start Overview
                 </h4>
                 <p className="text-slate-300">
-                  Emit AutoSheet automates your daily work activity timesheets for <code className="text-indigo-300">app.emit.work</code>. It generates realistic, randomized task breakdowns mapped to your real project tags (`#BLS`, `#BackendDevelopment`, etc.), polishes them using AI, and dispatches them to Emit in 1 click!
+                  Emitus automates your daily work activity timesheets for <code className="text-indigo-300">app.emit.work</code>. It generates realistic, randomized task breakdowns mapped to your real project tags (`#BLS`, `#BackendDevelopment`, etc.), polishes them using AI, and dispatches them to Emit in 1 click!
                 </p>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
