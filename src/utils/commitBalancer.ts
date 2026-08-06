@@ -1,7 +1,7 @@
 import { BitbucketCommit, SentenceItem, GeneratorConfig, GeneratedActivity } from '../types/timesheet';
 import { generateTimesheet } from './timesheetGenerator';
 import { getCompanyHolidayInfo } from '../data/companyHolidays';
-import { stripJiraTicket } from './bitbucketIntegration';
+import { isMergeCommit, stripJiraTicket } from './bitbucketIntegration';
 
 export interface BalancedDayResult {
   dateStr: string;
@@ -129,6 +129,7 @@ export function balanceCommitsAcrossDateRange(
 
     const assignedCommits = dayCommitMap[dateStr] || [];
     const originalDayCommits = commitsByDate[dateStr] || [];
+    const nonMergeCommits = assignedCommits.filter(c => !isMergeCommit(c.rawMessage));
     let source: BalancedDayResult['source'] = 'commits';
 
     if (originalDayCommits.length === 0 && assignedCommits.length > 0) {
@@ -137,8 +138,8 @@ export function balanceCommitsAcrossDateRange(
 
     let activities: GeneratedActivity[] = [];
 
-    if (assignedCommits.length > 0) {
-      // Create timesheet activities from assigned commits
+    // If day has real feature/fix commits (or feature commits accompanied by merge commits)
+    if (nonMergeCommits.length > 0) {
       const dayConfig: GeneratorConfig = {
         ...baseConfig,
         dateStr,
@@ -159,19 +160,40 @@ export function balanceCommitsAcrossDateRange(
 
       activities = generateTimesheet(commitSentences, dayConfig);
     } else {
-      // Zero-commit gap day -> Auto-fill using PAST EMIT HISTORY (without CM-number ticket IDs)
-      source = 'emit_history';
+      // Either zero commits OR 100% standalone merge commits -> Mix in past Emit history feature tasks!
+      source = assignedCommits.length > 0 ? 'overflow' : 'emit_history';
+
+      const shift = (idx * 2) % Math.max(1, gapFillPool.length);
+      const rotatedGapPool = [...gapFillPool.slice(shift), ...gapFillPool.slice(0, shift)];
+
+      const combinedSentences: SentenceItem[] = [];
+
+      // Keep max 1 merge commit if standalone merge commits were present
+      if (assignedCommits.length > 0) {
+        const singleMerge = assignedCommits[0];
+        combinedSentences.push({
+          id: `sent_merge_0_${singleMerge.hash}`,
+          text: singleMerge.cleanMessage,
+          category: 'BackendDevelopment',
+          defaultDurationMinutes: 90,
+          isActive: true,
+          tags: [baseConfig.defaultProjectTag || '#BLS', '#BackendDevelopment'],
+        });
+      }
+
+      // Add 2-3 feature tasks from past Emit history
+      combinedSentences.push(...rotatedGapPool.slice(0, 3));
+
       const dayConfig: GeneratorConfig = {
         ...baseConfig,
         dateStr,
+        targetTaskCount: combinedSentences.length,
         randomizeOrder: true,
       };
 
-      const shift = (idx * 2) % Math.max(1, gapFillPool.length);
-      const rotated = [...gapFillPool.slice(shift), ...gapFillPool.slice(0, shift)];
+      activities = generateTimesheet(combinedSentences, dayConfig);
 
-      activities = generateTimesheet(rotated, dayConfig);
-      // Ensure all generated task descriptions strictly strip ticket numbers
+      // Clean task descriptions to leave out ticket IDs from non-commit tasks
       activities = activities.map(a => ({
         ...a,
         rawText: stripJiraTicket(a.rawText),

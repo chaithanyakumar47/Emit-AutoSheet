@@ -19,6 +19,14 @@ export function extractJiraTicket(msg: string): string | undefined {
 }
 
 /**
+ * Check if a commit message is a Git merge commit (e.g. "Merge branch 'main'", "Merge remote-tracking branch...")
+ */
+export function isMergeCommit(msg: string): boolean {
+  if (!msg) return false;
+  return /^\s*(merge\s|merged\s)/i.test(msg.trim());
+}
+
+/**
  * Strip ticket ID like "(CM-521)", "[CM-123]", or "CM-456" from commit message
  */
 export function stripJiraTicket(msg: string): string {
