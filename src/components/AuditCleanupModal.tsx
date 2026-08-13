@@ -186,17 +186,17 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
   const duplicateCount = duplicateIdSet.size;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 animate-fade-in overflow-hidden">
-      <div className="glass-panel w-full max-w-3xl rounded-2xl border border-white/[0.08] relative my-auto flex flex-col max-h-[90vh] shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/45 animate-fade-in overflow-hidden">
+      <div className="glass-panel w-full max-w-3xl rounded-xl border border-slate-200 relative my-auto flex flex-col max-h-[90vh] shadow-2xl">
         
         {/* Modal Header */}
-        <div className="p-5 border-b border-slate-800/80 flex items-center justify-between shrink-0 bg-slate-950/80 rounded-t-2xl">
+        <div className="p-5 border-b border-slate-200 flex items-center justify-between shrink-0 bg-white rounded-t-xl">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-950/60 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold text-sm shadow-lg shadow-amber-500/20">
+            <div className="w-10 h-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 font-bold text-sm ">
               <ShieldAlert className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white font-sans flex items-center">
+              <h3 className="text-base font-bold text-slate-950 font-sans flex items-center">
                 Audit &amp; Batch Cleanup Inspector
               </h3>
               <p className="text-xs text-slate-400">
@@ -205,13 +205,13 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
             </div>
           </div>
 
-          <button onClick={onClose} className="text-slate-400 hover:text-white p-1.5 rounded-xl hover:bg-slate-900">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-950 p-1.5 rounded-lg hover:bg-slate-100">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Filters & Control Bar */}
-        <div className="p-4 border-b border-slate-800/80 space-y-3 bg-slate-900/40 shrink-0">
+        <div className="p-4 border-b border-slate-200 space-y-3 bg-slate-50 shrink-0">
           
           {/* Preset Category Pills */}
           <div className="flex flex-wrap items-center justify-between gap-2">
@@ -220,8 +220,8 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                 onClick={() => setFilterType('weekends')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all ${
                   filterType === 'weekends'
-                    ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                    : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'
+                    ? 'bg-rose-600 text-white'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:text-slate-950 hover:bg-slate-50'
                 }`}
               >
                 <AlertTriangle className="w-3.5 h-3.5 mr-1.5" />
@@ -232,8 +232,8 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                 onClick={() => setFilterType('holidays')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all ${
                   filterType === 'holidays'
-                    ? 'bg-purple-600 text-white shadow-md shadow-purple-600/30'
-                    : 'bg-slate-950 text-purple-300 border border-purple-900/60 hover:text-white'
+                    ? 'bg-violet-600 text-white'
+                    : 'bg-white text-violet-700 border border-violet-200 hover:bg-violet-50'
                 }`}
               >
                 <PartyPopper className="w-3.5 h-3.5 mr-1.5" />
@@ -244,8 +244,8 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                 onClick={() => setFilterType('duplicates')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all ${
                   filterType === 'duplicates'
-                    ? 'bg-amber-600 text-white shadow-md shadow-amber-600/30'
-                    : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'
+                    ? 'bg-amber-600 text-white'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:text-slate-950 hover:bg-slate-50'
                 }`}
               >
                 <Filter className="w-3.5 h-3.5 mr-1.5" />
@@ -256,8 +256,8 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                 onClick={() => setFilterType('all')}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all ${
                   filterType === 'all'
-                    ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                    : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'
+                    ? 'bg-blue-700 text-white'
+                    : 'bg-white text-slate-600 border border-slate-200 hover:text-slate-950 hover:bg-slate-50'
                 }`}
               >
                 All Entries ({parsedActivities.length})
@@ -268,7 +268,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
             <button
               onClick={handleToggleSelectAll}
               disabled={filteredList.length === 0}
-              className="px-3 py-1.5 rounded-xl bg-slate-950 hover:bg-slate-900 border border-slate-800 text-slate-300 text-xs font-semibold flex items-center transition-colors disabled:opacity-50"
+              className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold flex items-center transition-colors disabled:opacity-50"
             >
               {isAllSelected ? (
                 <CheckSquare className="w-3.5 h-3.5 mr-1.5 text-blue-400" />
@@ -287,7 +287,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
               placeholder="Search by description, date (YYYY-MM-DD), holiday name, or tag..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
+              className="w-full bg-white border border-slate-200 rounded-lg pl-9 pr-3 py-1.5 text-xs text-slate-900 placeholder-slate-500 focus:outline-none focus:border-blue-500 font-sans"
             />
           </div>
 
@@ -308,12 +308,12 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                   onClick={() => handleToggleSingle(act._id)}
                   className={`p-3 rounded-xl border flex items-center justify-between cursor-pointer transition-all ${
                     isSelected
-                      ? 'bg-rose-950/20 border-rose-600/60 text-white shadow-md'
-                      : 'bg-slate-900/60 border-slate-800 text-slate-300 hover:border-slate-700'
+                      ? 'bg-rose-50 border-rose-300 text-slate-950'
+                      : 'bg-white border-slate-200 text-slate-700 hover:border-slate-300'
                   }`}
                 >
                   <div className="flex items-center space-x-3 min-w-0 pr-2">
-                    <button type="button" className="shrink-0 text-slate-400 hover:text-white">
+                    <button type="button" className="shrink-0 text-slate-400 hover:text-slate-950">
                       {isSelected ? (
                         <CheckSquare className="w-4 h-4 text-rose-400" />
                       ) : (
@@ -323,13 +323,13 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
 
                     <div className="min-w-0 space-y-0.5">
                       <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                        <span className="text-xs font-bold text-white flex items-center">
+                        <span className="text-xs font-bold text-slate-950 flex items-center">
                           <Calendar className="w-3 h-3 mr-1 text-slate-400" />
                           {act.dateStr} ({act.dayOfWeek})
                         </span>
                         {act.isCompanyHoliday && (
-                          <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-purple-950 text-purple-300 border border-purple-800/80 flex items-center">
-                            <PartyPopper className="w-2.5 h-2.5 mr-1 text-purple-400" />
+                          <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-violet-50 text-violet-700 border border-violet-200 flex items-center">
+                            <PartyPopper className="w-2.5 h-2.5 mr-1 text-violet-600" />
                             {act.holidayName || 'Company Holiday'}
                           </span>
                         )}
@@ -339,7 +339,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
                           </span>
                         )}
                         {duplicateIdSet.has(act._id) && (
-                          <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-amber-950 text-amber-400 border border-amber-800/80">
+                          <span className="px-1.5 py-0.5 text-[10px] font-bold rounded bg-amber-950 text-amber-700 border border-amber-800/80">
                             Duplicate
                           </span>
                         )}
@@ -373,15 +373,15 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
         )}
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-slate-800/80 flex items-center justify-between shrink-0 bg-slate-950/80 rounded-b-2xl">
+        <div className="p-4 border-t border-slate-200 flex items-center justify-between shrink-0 bg-slate-50 rounded-b-xl">
           <span className="text-xs text-slate-400">
-            Selected <strong className="text-white">{selectedIds.length}</strong> of {filteredList.length} entries
+            Selected <strong className="text-slate-950">{selectedIds.length}</strong> of {filteredList.length} entries
           </span>
 
           <div className="flex items-center space-x-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold"
+              className="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 text-xs font-semibold"
             >
               Cancel
             </button>
@@ -389,7 +389,7 @@ export const AuditCleanupModal: React.FC<AuditCleanupModalProps> = ({
             <button
               onClick={handleBatchDelete}
               disabled={isDeleting || selectedIds.length === 0}
-              className="px-5 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30 flex items-center justify-center transition-all disabled:opacity-50"
+              className="px-5 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs flex items-center justify-center transition-all disabled:opacity-50"
             >
               <Trash2 className="w-3.5 h-3.5 mr-1.5" />
               {isDeleting ? 'Deleting...' : `Delete Selected (${selectedIds.length})`}

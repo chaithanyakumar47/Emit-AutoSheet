@@ -242,11 +242,11 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
     <div className="space-y-6">
       
       {/* Date Range Picker & Controls */}
-      <div className="glass-panel rounded-2xl p-4 sm:p-6 shadow-xl space-y-4 border border-white/[0.08]">
+      <div className="glass-panel rounded-xl p-4 sm:p-5 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight flex items-center">
-              <Calendar className="w-5 h-5 mr-2 text-indigo-400" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-950 tracking-tight flex items-center">
+              <Calendar className="w-5 h-5 mr-2 text-blue-600" />
               Date Range Bulk Push &amp; Gap Filling Studio
             </h2>
             <p className="text-xs text-slate-400 mt-1">
@@ -257,19 +257,19 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
           <div className="flex items-center space-x-1.5 flex-wrap gap-y-1">
             <button
               onClick={() => handleApplyPreset('this_week')}
-              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-950 hover:bg-slate-900 text-indigo-300 border border-slate-800 transition-colors"
+              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white hover:bg-slate-50 text-blue-700 border border-slate-200 transition-colors"
             >
               This Week
             </button>
             <button
               onClick={() => handleApplyPreset('last_week')}
-              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-950 hover:bg-slate-900 text-indigo-300 border border-slate-800 transition-colors"
+              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white hover:bg-slate-50 text-blue-700 border border-slate-200 transition-colors"
             >
               Last Week
             </button>
             <button
               onClick={() => handleApplyPreset('this_month')}
-              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-slate-950 hover:bg-slate-900 text-indigo-300 border border-slate-800 transition-colors"
+              className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white hover:bg-slate-50 text-blue-700 border border-slate-200 transition-colors"
             >
               This Month
             </button>
@@ -277,34 +277,34 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
         </div>
 
         {/* Inputs Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-3 border-t border-slate-800/80">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-3 border-t border-slate-200">
           <div>
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Start Date
             </label>
             <input
               type="date"
               value={startDateStr}
               onChange={e => setStartDateStr(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-sans"
+              className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-sans"
             />
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               End Date
             </label>
             <input
               type="date"
               value={endDateStr}
               onChange={e => setEndDateStr(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-blue-500 font-sans"
+              className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-sans"
             />
           </div>
 
           {/* Bulk Hours per Day */}
           <div>
-            <label className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-1">
+            <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Hours / Day
             </label>
             <div className="flex items-center space-x-1">
@@ -314,8 +314,8 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                   onClick={() => setTargetHoursPerDay(hrs)}
                   className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                     targetHoursPerDay === hrs
-                      ? 'bg-blue-600 text-white shadow-md'
-                      : 'bg-slate-950 text-slate-400 border border-slate-800 hover:text-slate-200'
+                      ? 'bg-blue-700 text-white border border-blue-700'
+                      : 'bg-white text-slate-600 border border-slate-200 hover:text-slate-950 hover:bg-slate-50'
                   }`}
                 >
                   {hrs}h
@@ -326,14 +326,14 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
           {/* Bulk Tasks per Day Selector */}
           <div>
-            <label className="text-[11px] font-semibold text-sky-400 uppercase tracking-wider block mb-1 flex items-center">
+            <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1 flex items-center">
               <Sliders className="w-3 h-3 mr-1" />
               Tasks / Day
             </label>
             <select
               value={String(targetTaskCountPerDay)}
               onChange={e => setTargetTaskCountPerDay(e.target.value === 'auto' ? 'auto' : Number(e.target.value))}
-              className="w-full bg-slate-950 border border-sky-800/60 rounded-xl px-2.5 py-2 text-xs text-sky-300 focus:outline-none focus:border-sky-500 font-sans font-semibold"
+              className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-2 text-xs text-slate-900 focus:outline-none focus:border-sky-500 font-sans font-semibold"
             >
               <option value="auto">Auto (Varied)</option>
               <option value="1">1 Task / Day</option>
@@ -348,12 +348,12 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
           </div>
 
           <div className="flex items-center pt-2 sm:pt-6">
-            <label className="flex items-center cursor-pointer space-x-2 text-xs text-slate-300">
+            <label className="flex items-center cursor-pointer space-x-2 text-xs text-slate-600">
               <input
                 type="checkbox"
                 checked={includeWeekends}
                 onChange={e => setIncludeWeekends(e.target.checked)}
-                className="w-4 h-4 rounded border-slate-700 bg-slate-950 text-blue-600 focus:ring-blue-500"
+                className="w-4 h-4 rounded border-slate-300 bg-white text-blue-700 focus:ring-blue-500"
               />
               <span className="whitespace-nowrap">Include Weekends</span>
             </label>
@@ -361,11 +361,11 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
         </div>
 
         {/* Dedicated Action Row for Un-cramped Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-3 border-t border-slate-800/80">
+        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-3 border-t border-slate-200">
           <button
             onClick={handleAnalyzeRange}
             disabled={isFetching}
-            className="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/20 flex items-center justify-center transition-all disabled:opacity-50 whitespace-nowrap"
+            className="w-full sm:w-auto px-5 py-2.5 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs rounded-lg flex items-center justify-center transition-all disabled:opacity-50 whitespace-nowrap"
           >
             <RefreshCw className={`w-3.5 h-3.5 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
             {isFetching ? 'Fetching Range...' : 'Fetch & Detect Gaps'}
@@ -373,10 +373,10 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
           <button
             onClick={() => setIsAuditModalOpen(true)}
-            className="w-full sm:w-auto px-4 py-2.5 bg-rose-950/60 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center transition-all whitespace-nowrap"
+            className="w-full sm:w-auto px-4 py-2.5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold text-xs rounded-xl shadow-lg flex items-center justify-center transition-all whitespace-nowrap"
             title="Audit Mistakes & Batch Cleanup (Filled Weekends, Duplicates)"
           >
-            <ShieldAlert className="w-3.5 h-3.5 mr-2 text-rose-400" />
+            <ShieldAlert className="w-3.5 h-3.5 mr-2 text-rose-600" />
             Audit Mistakes
           </button>
         </div>
@@ -386,31 +386,31 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="panel-surface p-4 rounded-xl flex flex-col justify-between">
           <span className="text-[11px] font-semibold text-slate-400 uppercase">Working Days</span>
-          <span className="text-lg sm:text-xl font-bold text-white mt-1">{rangeSummary.workingDays} Days</span>
+          <span className="text-lg sm:text-xl font-bold text-slate-950 mt-1">{rangeSummary.workingDays} Days</span>
         </div>
 
         <div className="panel-surface p-4 rounded-xl flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-emerald-400 uppercase">Fully Logged</span>
-          <span className="text-lg sm:text-xl font-bold text-emerald-400 mt-1">{rangeSummary.fullyLoggedDaysCount} Days</span>
+          <span className="text-[11px] font-semibold text-emerald-700 uppercase">Fully Logged</span>
+          <span className="text-lg sm:text-xl font-bold text-emerald-700 mt-1">{rangeSummary.fullyLoggedDaysCount} Days</span>
         </div>
 
         <div className="panel-surface p-4 rounded-xl flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-amber-400 uppercase">Partial Hours</span>
-          <span className="text-lg sm:text-xl font-bold text-amber-400 mt-1">{rangeSummary.partialDaysCount} Days</span>
+          <span className="text-[11px] font-semibold text-amber-700 uppercase">Partial Hours</span>
+          <span className="text-lg sm:text-xl font-bold text-amber-700 mt-1">{rangeSummary.partialDaysCount} Days</span>
         </div>
 
         <div className="panel-surface p-4 rounded-xl flex flex-col justify-between">
-          <span className="text-[11px] font-semibold text-rose-400 uppercase">Missing Gaps</span>
-          <span className="text-lg sm:text-xl font-bold text-rose-400 mt-1">{rangeSummary.missingDaysCount} Days</span>
+          <span className="text-[11px] font-semibold text-rose-600 uppercase">Missing Gaps</span>
+          <span className="text-lg sm:text-xl font-bold text-rose-600 mt-1">{rangeSummary.missingDaysCount} Days</span>
         </div>
       </div>
 
       {/* Bulk Action Header */}
-      <div className="glass-panel p-4 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-3 border border-indigo-500/20 bg-indigo-950/20">
+      <div className="glass-panel p-4 rounded-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border border-slate-200 bg-white">
         <div className="flex items-center space-x-2">
-          <Zap className="w-5 h-5 text-indigo-400 shrink-0" />
+          <Zap className="w-5 h-5 text-blue-600 shrink-0" />
           <div>
-            <h4 className="text-xs font-bold text-white">Bulk Gap Fill &amp; Submit Pipeline</h4>
+            <h4 className="text-xs font-bold text-slate-950">Bulk Gap Fill &amp; Submit Pipeline</h4>
             <p className="text-[11px] text-slate-400">
               {missingGapDays.length} gap/partial days detected. Auto-fill all missing days ({targetHoursPerDay}h/day &bull; {targetTaskCountPerDay === 'auto' ? 'Auto tasks' : `${targetTaskCountPerDay} tasks/day`}).
             </p>
@@ -421,7 +421,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
           <button
             onClick={handleFillAllMissingDays}
             disabled={missingGapDays.length === 0}
-            className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg shadow-purple-600/20 flex items-center justify-center transition-all disabled:opacity-50"
+            className="flex-1 sm:flex-none px-4 py-2 rounded-xl bg-violet-600 hover:bg-violet-700 text-white font-bold text-xs  flex items-center justify-center transition-all disabled:opacity-50"
           >
             <Sparkles className="w-3.5 h-3.5 mr-1.5" />
             Auto-Fill ({missingGapDays.length} Gaps)
@@ -430,7 +430,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
           <button
             onClick={handleBulkSubmitAll}
             disabled={isSubmittingBulk || Object.keys(filledDayActivities).length === 0}
-            className="flex-1 sm:flex-none px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/20 flex items-center justify-center transition-all disabled:opacity-50"
+            className="flex-1 sm:flex-none px-5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs  flex items-center justify-center transition-all disabled:opacity-50"
           >
             <Send className="w-3.5 h-3.5 mr-1.5" />
             {isSubmittingBulk ? 'Submitting...' : `Bulk Submit (${Object.keys(filledDayActivities).length} Days)`}
@@ -439,16 +439,16 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
       </div>
 
       {bulkStatusMsg && (
-        <div className="p-3 rounded-xl bg-indigo-950/60 border border-indigo-500/40 text-indigo-300 text-xs flex items-center justify-center">
-          <RefreshCw className="w-4 h-4 mr-2 animate-spin text-indigo-400" />
+        <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-700 text-xs flex items-center justify-center">
+          <RefreshCw className="w-4 h-4 mr-2 animate-spin text-blue-600" />
           <span>{bulkStatusMsg}</span>
         </div>
       )}
 
       {/* Calendar Matrix Grid */}
       <div className="space-y-3">
-        <h3 className="text-sm font-bold text-white flex items-center">
-          <Layers className="w-4 h-4 mr-2 text-indigo-400" />
+        <h3 className="text-sm font-bold text-slate-950 flex items-center">
+          <Layers className="w-4 h-4 mr-2 text-blue-600" />
           Range Calendar Matrix ({rangeSummary.days.length} Days)
         </h3>
 
@@ -458,41 +458,41 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             const hasGenerated = generatedForDay.length > 0;
             const dayTaskCountSetting = customDayTaskCounts[day.dateStr] ?? targetTaskCountPerDay;
 
-            let cardBorder = 'border-slate-800';
+            let cardBorder = 'border-slate-200';
             let statusBadge = (
-              <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-rose-950/60 text-rose-400 border border-rose-800/60 flex items-center">
+              <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-rose-50 text-rose-700 border border-rose-200 flex items-center">
                 <AlertCircle className="w-3 h-3 mr-1" />
                 Missing Gap
               </span>
             );
 
             if (day.status === 'fully_logged') {
-              cardBorder = 'border-emerald-800/50 bg-emerald-950/10';
+              cardBorder = 'border-emerald-200 bg-emerald-50/70';
               statusBadge = (
-                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-950/60 text-emerald-400 border border-emerald-800/60 flex items-center">
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center">
                   <CheckCircle2 className="w-3 h-3 mr-1" />
                   Logged ({day.loggedHours}h)
                 </span>
               );
             } else if (day.status === 'partial') {
-              cardBorder = 'border-amber-800/50 bg-amber-950/10';
+              cardBorder = 'border-amber-200 bg-amber-50/70';
               statusBadge = (
-                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-950/60 text-amber-400 border border-amber-800/60 flex items-center">
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-amber-50 text-amber-700 border border-amber-200 flex items-center">
                   <Clock className="w-3 h-3 mr-1" />
                   Partial ({day.loggedHours}h / {day.targetHours}h)
                 </span>
               );
             } else if (day.status === 'holiday') {
-              cardBorder = 'border-purple-800/50 bg-purple-950/10';
+              cardBorder = 'border-violet-200 bg-violet-50/70';
               statusBadge = (
-                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-purple-950/60 text-purple-300 border border-purple-800/60 flex items-center truncate max-w-[140px]" title={day.holidayName}>
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-violet-50 text-violet-700 border border-violet-200 flex items-center truncate max-w-[140px]" title={day.holidayName}>
                   🎉 {day.holidayName || 'Holiday'}
                 </span>
               );
             } else if (day.status === 'weekend') {
-              cardBorder = 'border-slate-800/60 bg-slate-950/30';
+              cardBorder = 'border-slate-200 bg-slate-50';
               statusBadge = (
-                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-slate-900 text-slate-400 border border-slate-800 flex items-center">
+                <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-slate-100 text-slate-600 border border-slate-200 flex items-center">
                   Weekend
                 </span>
               );
@@ -501,18 +501,18 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             return (
               <div
                 key={day.dateStr}
-                className={`panel-surface rounded-xl p-4 border ${cardBorder} flex flex-col justify-between space-y-3 transition-all hover:border-slate-700 relative group`}
+                className={`panel-surface rounded-xl p-4 border ${cardBorder} flex flex-col justify-between space-y-3 transition-all hover:border-slate-300 relative group`}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-xs font-bold text-white">{day.dateStr}</span>
+                    <span className="text-xs font-bold text-slate-950">{day.dateStr}</span>
                     <span className="text-[11px] text-slate-400 ml-2">({day.dayOfWeek})</span>
                   </div>
                   <div className="flex items-center space-x-1.5">
                     {statusBadge}
                     <button
                       onClick={() => setSelectedDay(day)}
-                      className="p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 transition-colors"
+                      className="p-1 text-slate-400 hover:text-slate-950 rounded hover:bg-slate-100 transition-colors"
                       title="Inspect & Edit Day Activities"
                     >
                       <Eye className="w-3.5 h-3.5" />
@@ -521,14 +521,14 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                 </div>
 
                 {/* Day Task Entries */}
-                <div className="text-xs text-slate-300 space-y-1 bg-slate-950/60 p-3 rounded-xl font-sans border border-slate-800/60">
+                <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-3 rounded-lg font-sans border border-slate-200">
                   {day.activities.length > 0 ? (
                     <div>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="font-semibold text-slate-200">{day.activities.length} Posted Entries:</span>
+                        <span className="font-semibold text-slate-700">{day.activities.length} Posted Entries:</span>
                         <button
                           onClick={() => handleDeleteAllPostedForDay(day)}
-                          className="text-[10px] text-rose-400 hover:underline flex items-center"
+                          className="text-[10px] text-rose-600 hover:underline flex items-center"
                           title="Delete all posted activities for this day"
                         >
                           <Trash2 className="w-2.5 h-2.5 mr-0.5" /> Delete All
@@ -537,7 +537,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
                       <ul className="space-y-1.5 max-h-28 overflow-y-auto scrollbar-none">
                         {day.activities.map((a: any) => (
-                          <li key={a._id || Math.random()} className="flex items-center justify-between text-[11px] text-slate-400 hover:text-slate-200 group/item">
+                          <li key={a._id || Math.random()} className="flex items-center justify-between text-[11px] text-slate-400 hover:text-slate-700 group/item">
                             <span className="truncate pr-2" title={(a.description || a.rawText || '').replace(/^#\w+\s+#\w+\s*/, '')}>
                               &bull; {(a.description || a.rawText || '').replace(/^#\w+\s+#\w+\s*/, '')}
                             </span>
@@ -545,7 +545,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                               <button
                                 onClick={() => handleDeleteSingleEmitActivity(a._id, day.dateStr)}
                                 disabled={isDeletingActivityId === a._id}
-                                className="text-slate-500 hover:text-rose-400 p-0.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-opacity"
+                                className="text-slate-500 hover:text-rose-600 p-0.5 shrink-0 opacity-100 sm:opacity-0 sm:group-hover/item:opacity-100 transition-opacity"
                                 title="Delete this activity directly on Emit"
                               >
                                 <Trash2 className="w-3 h-3" />
@@ -557,10 +557,10 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                     </div>
                   ) : hasGenerated ? (
                     <div>
-                      <span className="font-semibold text-purple-300">Generated {generatedForDay.length} Tasks ({generatedForDay.reduce((a,b)=>a+b.durationMinutes,0)/60}h):</span>
+                      <span className="font-semibold text-violet-700">Generated {generatedForDay.length} Tasks ({generatedForDay.reduce((a,b)=>a+b.durationMinutes,0)/60}h):</span>
                       <ul className="mt-1 space-y-1">
                         {generatedForDay.slice(0, 3).map((a, idx) => (
-                          <li key={idx} className="text-[11px] text-purple-200 truncate" title={a.polishedText || a.rawText}>
+                          <li key={idx} className="text-[11px] text-violet-600 truncate" title={a.polishedText || a.rawText}>
                             &bull; {a.polishedText || a.rawText}
                           </li>
                         ))}
@@ -574,7 +574,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                 </div>
 
                 {/* Day Card Controls & Actions Footer */}
-                <div className="space-y-2 pt-1 border-t border-slate-800/60">
+                <div className="space-y-2 pt-1 border-t border-slate-200/60">
                   
                   {/* Per-Day Task Count Override Bar */}
                   <div className="flex items-center justify-between text-[11px] text-slate-400">
@@ -586,7 +586,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                         setCustomDayTaskCounts(prev => ({ ...prev, [day.dateStr]: val }));
                         handleFillSingleDay(day.dateStr, val);
                       }}
-                      className="bg-slate-950 border border-slate-800 rounded px-1.5 py-0.5 text-[10px] text-purple-300 font-semibold focus:outline-none"
+                      className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] text-violet-700 font-semibold focus:outline-none"
                     >
                       <option value="auto">Auto</option>
                       <option value="1">1 Task</option>
@@ -603,9 +603,9 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                   <div className="flex items-center justify-between">
                     <button
                       onClick={() => handleFillSingleDay(day.dateStr)}
-                      className="px-3 py-1.5 text-xs font-semibold text-purple-300 bg-purple-950/50 hover:bg-purple-900/60 border border-purple-800/60 rounded-xl flex items-center transition-colors"
+                      className="px-3 py-1.5 text-xs font-semibold text-violet-700 bg-violet-50 hover:bg-violet-100 border border-violet-200 rounded-lg flex items-center transition-colors"
                     >
-                      <Sparkles className="w-3.5 h-3.5 mr-1.5 text-purple-400" />
+                      <Sparkles className="w-3.5 h-3.5 mr-1.5 text-violet-600" />
                       {hasGenerated ? 'Re-Fill Day' : 'Fill Day'}
                     </button>
 
@@ -621,9 +621,9 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                             addToast('error', `Failed to post for ${day.dateStr}`);
                           }
                         }}
-                        className="px-3 py-1.5 text-xs font-semibold text-emerald-300 bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-800/60 rounded-xl flex items-center transition-colors"
+                        className="px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-xl flex items-center transition-colors"
                       >
-                        <Send className="w-3.5 h-3.5 mr-1.5 text-emerald-400" />
+                        <Send className="w-3.5 h-3.5 mr-1.5 text-emerald-700" />
                         Submit Day
                       </button>
                     )}
@@ -638,14 +638,14 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
       {/* Selected Day Inspector & Task Editor Modal */}
       {selectedDay && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 animate-fade-in overflow-hidden">
-          <div className="glass-panel w-full max-w-2xl rounded-2xl border border-white/[0.08] relative my-auto flex flex-col max-h-[90vh] shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/45 animate-fade-in overflow-hidden">
+          <div className="glass-panel w-full max-w-2xl rounded-xl border border-slate-200 relative my-auto flex flex-col max-h-[90vh] shadow-2xl">
             
             {/* Modal Header */}
-            <div className="p-5 border-b border-slate-800/80 flex items-center justify-between shrink-0">
+            <div className="p-5 border-b border-slate-200/80 flex items-center justify-between shrink-0">
               <div>
-                <h3 className="text-base font-bold text-white flex items-center">
-                  <Calendar className="w-4 h-4 mr-2 text-indigo-400" />
+                <h3 className="text-base font-bold text-slate-950 flex items-center">
+                  <Calendar className="w-4 h-4 mr-2 text-blue-600" />
                   Manage Day: {selectedDay.dateStr} ({selectedDay.dayOfWeek})
                 </h3>
                 <p className="text-xs text-slate-400 mt-0.5">
@@ -653,7 +653,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                 </p>
               </div>
 
-              <button onClick={() => setSelectedDay(null)} className="text-slate-400 hover:text-white p-1.5 rounded-xl hover:bg-slate-900">
+              <button onClick={() => setSelectedDay(null)} className="text-slate-500 hover:text-slate-950 p-1.5 rounded-lg hover:bg-slate-100">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -662,8 +662,8 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             <div className="p-5 space-y-4 overflow-y-auto flex-1 scrollbar-none">
               
               {/* Task Count Override Control inside Modal */}
-              <div className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-300">Generated Tasks Count for {selectedDay.dateStr}:</span>
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <span className="text-xs font-semibold text-slate-700">Generated Tasks Count for {selectedDay.dateStr}:</span>
                 <select
                   value={String(customDayTaskCounts[selectedDay.dateStr] ?? targetTaskCountPerDay)}
                   onChange={e => {
@@ -671,7 +671,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                     setCustomDayTaskCounts(prev => ({ ...prev, [selectedDay.dateStr]: val }));
                     handleFillSingleDay(selectedDay.dateStr, val);
                   }}
-                  className="bg-slate-950 border border-purple-800/60 rounded-lg px-2 py-1 text-xs text-purple-300 font-semibold focus:outline-none"
+                  className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs text-violet-700 font-semibold focus:outline-none"
                 >
                   <option value="auto">Auto (Varied)</option>
                   <option value="1">1 Task / Day</option>
@@ -688,7 +688,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
               {/* Posted Entries on Emit */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-slate-200 uppercase tracking-wider">
+                  <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                     Posted Activities on Emit ({selectedDay.activities.length})
                   </h4>
                   {selectedDay.activities.length > 0 && (
@@ -696,22 +696,22 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                       onClick={() => handleDeleteAllPostedForDay(selectedDay)}
                       className="px-2.5 py-1 text-xs font-semibold text-rose-300 bg-rose-950/60 hover:bg-rose-900/60 border border-rose-800/60 rounded-lg flex items-center"
                     >
-                      <Trash2 className="w-3 h-3 mr-1 text-rose-400" />
+                      <Trash2 className="w-3 h-3 mr-1 text-rose-600" />
                       Delete All Posted
                     </button>
                   )}
                 </div>
 
                 {selectedDay.activities.length === 0 ? (
-                  <div className="p-3 text-xs text-slate-500 italic bg-slate-950/40 rounded-xl">
+                  <div className="p-3 text-xs text-slate-500 italic bg-slate-50 rounded-lg border border-slate-200">
                     No activities posted to Emit on this date.
                   </div>
                 ) : (
                   <div className="space-y-2">
                     {selectedDay.activities.map((a: any) => (
-                      <div key={a._id} className="p-3 rounded-xl bg-slate-900/80 border border-slate-800 flex items-center justify-between">
+                      <div key={a._id} className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-between">
                         <div className="space-y-0.5 min-w-0 pr-2">
-                          <p className="text-xs font-medium text-slate-200 truncate">
+                          <p className="text-xs font-medium text-slate-700 truncate">
                             {(a.description || a.rawText || '').replace(/^#\w+\s+#\w+\s*/, '')}
                           </p>
                           <div className="flex items-center space-x-2 text-[10px] text-slate-400">
@@ -725,7 +725,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                           disabled={isDeletingActivityId === a._id}
                           className="px-2.5 py-1 text-xs font-semibold text-rose-300 bg-rose-950/40 hover:bg-rose-900/50 border border-rose-800/60 rounded-lg flex items-center shrink-0"
                         >
-                          <Trash2 className="w-3 h-3 mr-1 text-rose-400" />
+                          <Trash2 className="w-3 h-3 mr-1 text-rose-600" />
                           Delete
                         </button>
                       </div>
@@ -736,15 +736,15 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
               {/* Generated Fill Draft for Day */}
               {filledDayActivities[selectedDay.dateStr] && (
-                <div className="space-y-2 pt-2 border-t border-slate-800/80">
-                  <h4 className="text-xs font-bold text-purple-300 uppercase tracking-wider">
+                <div className="space-y-2 pt-2 border-t border-slate-200">
+                  <h4 className="text-xs font-bold text-violet-700 uppercase tracking-wider">
                     Generated Timesheet Fill Draft ({filledDayActivities[selectedDay.dateStr].length} Tasks)
                   </h4>
                   <div className="space-y-1.5">
                     {filledDayActivities[selectedDay.dateStr].map((a, idx) => (
-                      <div key={idx} className="p-2.5 rounded-xl bg-purple-950/20 border border-purple-800/40 text-xs text-purple-200 flex items-center justify-between">
+                      <div key={idx} className="p-2.5 rounded-lg bg-violet-50 border border-violet-200 text-xs text-violet-700 flex items-center justify-between">
                         <span>• {a.polishedText || a.rawText}</span>
-                        <span className="font-semibold text-indigo-300 shrink-0 ml-2">{a.durationMinutes}m</span>
+                        <span className="font-semibold text-blue-700 shrink-0 ml-2">{a.durationMinutes}m</span>
                       </div>
                     ))}
                   </div>
@@ -754,10 +754,10 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             </div>
 
             {/* Modal Footer */}
-            <div className="p-4 border-t border-slate-800/80 flex items-center justify-between shrink-0 bg-slate-950/80 rounded-b-2xl">
+            <div className="p-4 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 shrink-0 bg-slate-50 rounded-b-xl">
               <button
                 onClick={() => handleFillSingleDay(selectedDay.dateStr)}
-                className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-md shadow-purple-600/30 flex items-center"
+                className="px-4 py-2 rounded-lg bg-violet-600 hover:bg-violet-700 text-white font-bold text-xs flex items-center justify-center"
               >
                 <Sparkles className="w-3.5 h-3.5 mr-1.5" />
                 Generate Fill Timesheet ({customDayTaskCounts[selectedDay.dateStr] ?? targetTaskCountPerDay} Tasks)
@@ -765,7 +765,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
               <button
                 onClick={() => setSelectedDay(null)}
-                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold text-xs"
+                className="px-4 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-xs"
               >
                 Close
               </button>

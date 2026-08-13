@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, Layers, BookOpen, ExternalLink, Zap, Calendar, Menu, X, Settings, Clock, HelpCircle, ChevronDown, Check, Plus, FolderKanban, Trash2 } from 'lucide-react';
+import { ShieldCheck, Layers, BookOpen, ExternalLink, Calendar, Menu, X, Settings, ChevronDown, Check, Plus, FolderKanban, Trash2, Moon, Sun } from 'lucide-react';
 import { EmitSettings, AiSettings } from '../types/timesheet';
 
 import { FolderGit2 } from 'lucide-react';
@@ -18,6 +18,8 @@ interface NavbarProps {
   activeSentencesCount: number;
   selectedProjectTag: string;
   onSelectProjectTag: (tag: string) => void;
+  themeMode: 'light' | 'dark';
+  onToggleTheme: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -33,6 +35,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   activeSentencesCount,
   selectedProjectTag,
   onSelectProjectTag,
+  themeMode,
+  onToggleTheme,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isProjectDropdownOpen, setIsProjectDropdownOpen] = useState(false);
@@ -96,38 +100,38 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, [availableProjects, selectedProjectTag]);
 
   return (
-    <header className="bg-[#07090e]/95 backdrop-blur-xl border-b border-white/[0.08] sticky top-0 z-40">
+    <header className="topbar sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="h-16 sm:h-20 flex items-center justify-between gap-4">
+        <div className="min-h-16 sm:min-h-20 py-3 flex items-center justify-between gap-3">
           
           {/* Left: Bluestar Brand Logo & Workspace Dynamic Subtitle */}
-          <div className="flex items-center space-x-3 shrink-0">
-            <div className="w-10 h-10 rounded-2xl overflow-hidden shadow-lg shadow-blue-600/40 border border-sky-400/30 bg-black/80 flex items-center justify-center p-0.5 group hover:scale-105 transition-transform">
-              <img src="/assets/emitus_logo.png" alt="Emitus Logo" className="w-full h-full object-contain rounded-xl" />
+          <div className="flex items-center space-x-3 min-w-0 shrink">
+            <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 flex items-center justify-center p-0.5 group hover:scale-[1.02] transition-transform shrink-0">
+              <img src="/assets/emitus_logo.png" alt="Emitus Logo" className="w-full h-full object-contain rounded-lg" />
             </div>
-            <div>
-              <h1 className="font-extrabold text-base text-white tracking-tight font-sans flex items-center">
+            <div className="min-w-0">
+              <h1 className="font-bold text-base text-slate-950 tracking-tight font-sans flex items-center">
                 Emitus
               </h1>
               
               {/* Dynamic Project Selector Subtitle */}
               <div className="relative">
-                <p className="text-[11px] text-slate-400 font-medium flex items-center space-x-1.5 mt-0.5">
+                <p className="text-[11px] text-slate-500 font-medium flex items-center space-x-1.5 mt-0.5 min-w-0">
                   <button
                     onClick={() => setIsProjectDropdownOpen(!isProjectDropdownOpen)}
-                    className="text-sky-400 hover:text-sky-300 font-semibold flex items-center px-1.5 py-0.5 rounded-md hover:bg-blue-950/50 border border-sky-500/20 transition-all group"
+                    className="text-blue-700 hover:text-blue-800 font-semibold flex items-center px-1.5 py-0.5 rounded-md hover:bg-blue-50 border border-blue-100 transition-all group min-w-0"
                     title="Click to switch active project tag"
                   >
-                    <FolderKanban className="w-3 h-3 mr-1 text-sky-400 group-hover:scale-110 transition-transform" />
-                    <span>{activeProjectLabel}</span>
+                    <FolderKanban className="w-3 h-3 mr-1 text-blue-600 group-hover:scale-110 transition-transform shrink-0" />
+                    <span className="truncate max-w-[130px] sm:max-w-[220px]">{activeProjectLabel}</span>
                     <ChevronDown className="w-3 h-3 ml-1 opacity-70" />
                   </button>
-                  <span>&bull;</span>
+                  <span className="hidden sm:inline">&bull;</span>
                   <a
                     href="https://app.emit.work/"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center text-slate-400 hover:text-sky-300 transition-colors"
+                    className="hidden sm:inline-flex items-center text-slate-500 hover:text-blue-700 transition-colors"
                   >
                     app.emit.work <ExternalLink className="w-3 h-3 ml-1" />
                   </a>
@@ -135,8 +139,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 
                 {/* Project Selector Dropdown Menu */}
                 {isProjectDropdownOpen && (
-                  <div className="absolute left-0 top-full mt-2 w-64 glass-panel rounded-2xl p-2 border border-sky-500/30 shadow-2xl z-50 animate-in fade-in slide-in-from-top-2">
-                    <div className="px-2 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-800 mb-1">
+                  <div className="absolute left-0 top-full mt-2 w-[min(18rem,calc(100vw-2rem))] glass-panel rounded-xl p-2 border border-slate-200 shadow-xl z-50 animate-in fade-in slide-in-from-top-2">
+                    <div className="px-2 py-1.5 text-[10px] font-bold uppercase text-slate-500 border-b border-slate-200 mb-1">
                       Active Project Tag
                     </div>
 
@@ -147,8 +151,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                           onClick={() => handleSelectPreset(p.tag)}
                           className={`w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-colors ${
                             selectedProjectTag.toLowerCase() === p.tag.toLowerCase()
-                              ? 'bg-blue-600 text-white shadow-md shadow-blue-600/30'
-                              : 'text-slate-300 hover:bg-slate-900 hover:text-white'
+                              ? 'bg-blue-700 text-white'
+                              : 'text-slate-700 hover:bg-slate-100 hover:text-slate-950'
                           }`}
                         >
                           <span className="truncate">{p.label}</span>
@@ -160,7 +164,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
 
                     {/* Custom Tag Input */}
-                    <div className="pt-1 border-t border-slate-800 mt-1">
+                    <div className="pt-1 border-t border-slate-200 mt-1">
                       {isCustomTagInput ? (
                         <form onSubmit={handleCustomSubmit} className="flex items-center space-x-1 p-1">
                           <input
@@ -168,17 +172,17 @@ export const Navbar: React.FC<NavbarProps> = ({
                             placeholder="#ProjectTag"
                             value={customTagValue}
                             onChange={e => setCustomTagValue(e.target.value)}
-                            className="w-full bg-slate-950 border border-sky-500/50 rounded-lg px-2 py-1 text-xs text-white focus:outline-none"
+                            className="w-full bg-white border border-blue-200 rounded-lg px-2 py-1 text-xs text-slate-900 focus:outline-none"
                             autoFocus
                           />
-                          <button type="submit" className="px-2 py-1 bg-blue-600 text-white rounded-lg text-xs font-bold">
+                          <button type="submit" className="px-2 py-1 bg-blue-700 text-white rounded-lg text-xs font-bold">
                             Save
                           </button>
                         </form>
                       ) : (
                         <button
                           onClick={() => setIsCustomTagInput(true)}
-                          className="w-full text-left px-2.5 py-1.5 rounded-xl text-xs font-semibold text-sky-400 hover:bg-blue-950/40 flex items-center"
+                          className="w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-semibold text-blue-700 hover:bg-blue-50 flex items-center"
                         >
                           <Plus className="w-3.5 h-3.5 mr-1.5" /> Add Custom Project Tag...
                         </button>
@@ -192,7 +196,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Center: Desktop Navigation Tabs (Bluestar Royal Blue Theme) */}
-          <nav className="hidden lg:flex items-center space-x-1 bg-[#0d121d] p-1.5 rounded-2xl border border-white/[0.08] shadow-inner">
+          <nav className="hidden xl:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
             {tabs.map(t => {
               const Icon = t.icon;
               const isActive = activeTab === t.id;
@@ -201,13 +205,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                   key={t.id}
                   onClick={() => onTabChange(t.id)}
                   className={`relative px-4 py-2 text-xs font-semibold rounded-xl transition-all whitespace-nowrap flex items-center ${
-                    isActive ? 'text-white' : 'text-slate-400 hover:text-slate-200'
+                    isActive ? 'text-white' : 'text-slate-600 hover:text-slate-950 hover:bg-white'
                   }`}
                 >
                   {isActive && (
                     <motion.div
                       layoutId="activeNavTab"
-                      className="absolute inset-0 bg-blue-600 rounded-xl shadow-md shadow-blue-600/35 border border-blue-400/20"
+                      className="absolute inset-0 bg-blue-700 rounded-lg"
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
@@ -226,14 +230,14 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Token Status Badge */}
             <button
               onClick={onOpenSettings}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center transition-all border whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center transition-all border whitespace-nowrap ${
                 isEmitConfigured
-                  ? 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60 hover:bg-emerald-900/50'
-                  : 'bg-amber-950/40 text-amber-300 border-amber-800/60 hover:bg-amber-900/50 animate-pulse'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
+                  : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
               }`}
               title="Connections Settings"
             >
-              <ShieldCheck className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isEmitConfigured ? 'text-emerald-400' : 'text-amber-400'}`} />
+              <ShieldCheck className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isEmitConfigured ? 'text-emerald-700' : 'text-amber-700'}`} />
               <span className="hidden sm:inline">{isEmitConfigured ? 'Token Connected' : 'Setup Token'}</span>
             </button>
 
@@ -241,10 +245,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             {onOpenAuditModal && (
               <button
                 onClick={onOpenAuditModal}
-                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold bg-rose-950/40 text-rose-300 border border-rose-800/60 hover:bg-rose-900/60 transition-colors flex items-center shrink-0"
+                className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 transition-colors flex items-center shrink-0"
                 title="Audit & Batch Delete Mistakes / Holidays from Emit"
               >
-                <Trash2 className="w-3.5 h-3.5 mr-1.5 text-rose-400" />
+                <Trash2 className="w-3.5 h-3.5 mr-1.5 text-rose-600" />
                 <span className="hidden sm:inline">Audit / Delete</span>
               </button>
             )}
@@ -252,16 +256,25 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Settings Gear Button */}
             <button
               onClick={onOpenSettings}
-              className="p-2 rounded-xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-slate-300 hover:text-white transition-colors"
+              className="p-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-600 hover:text-slate-950 transition-colors"
               title="Settings"
             >
               <Settings className="w-4 h-4" />
             </button>
 
+            <button
+              onClick={onToggleTheme}
+              className="theme-toggle"
+              title={`Switch to ${themeMode === 'dark' ? 'light' : 'dark'} theme`}
+              aria-label={`Switch to ${themeMode === 'dark' ? 'light' : 'dark'} theme`}
+            >
+              {themeMode === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+
             {/* Mobile Navigation Drawer Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl bg-[#0d121d] hover:bg-slate-800 border border-white/[0.08] text-slate-300 transition-colors"
+              className="xl:hidden p-2 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 text-slate-700 transition-colors"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -277,7 +290,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="lg:hidden bg-[#07090e] border-b border-white/[0.08] px-4 py-3 space-y-1.5"
+          className="xl:hidden bg-white border-b border-slate-200 px-4 py-3 space-y-1.5"
         >
           {tabs.map(t => {
             const Icon = t.icon;
@@ -291,8 +304,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                 }}
                 className={`w-full px-4 py-3 rounded-xl text-xs font-semibold flex items-center justify-between transition-colors ${
                   isActive
-                    ? 'bg-blue-600 text-white'
-                    : 'text-slate-300 hover:bg-slate-900'
+                    ? 'bg-blue-700 text-white'
+                    : 'text-slate-700 hover:bg-slate-100'
                 }`}
               >
                 <div className="flex items-center space-x-2.5">

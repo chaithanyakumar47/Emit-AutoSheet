@@ -31,29 +31,29 @@ export const AIPolishModal: React.FC<AIPolishModalProps> = ({
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/90 animate-fade-in overflow-hidden">
-      <div className="glass-panel w-full max-w-xl rounded-2xl border border-white/[0.08] relative my-auto flex flex-col max-h-[90vh] shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/45 animate-fade-in overflow-hidden">
+      <div className="glass-panel w-full max-w-xl rounded-xl border border-slate-200 relative my-auto flex flex-col max-h-[90vh] shadow-2xl">
         
         {/* Header */}
-        <div className="p-5 border-b border-slate-800/80 flex items-center justify-between shrink-0">
+        <div className="p-5 border-b border-slate-200 flex items-center justify-between shrink-0">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-purple-600/20">
+            <div className="w-10 h-10 rounded-lg bg-violet-600 flex items-center justify-center text-white">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white">AI Executive Natural Language Polish</h3>
+              <h3 className="text-base font-bold text-slate-950">AI Executive Natural Language Polish</h3>
               <p className="text-xs text-slate-400">Polishes {activities.length} timesheet activity descriptions.</p>
             </div>
           </div>
 
-          <button onClick={onClose} className="text-slate-400 hover:text-white p-1.5 rounded-xl hover:bg-slate-900">
+          <button onClick={onClose} className="text-slate-500 hover:text-slate-950 p-1.5 rounded-lg hover:bg-slate-100">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content Body */}
         <div className="p-5 space-y-4 overflow-y-auto flex-1 scrollbar-none">
-          <label className="text-xs font-semibold text-slate-300 uppercase tracking-wider block">
+          <label className="text-xs font-semibold text-slate-500 uppercase block">
             Select Writing Tone:
           </label>
 
@@ -65,12 +65,12 @@ export const AIPolishModal: React.FC<AIPolishModalProps> = ({
                   key={t.id}
                   onClick={() => setSelectedTone(t.id)}
                   className={`glass-card p-3.5 rounded-xl cursor-pointer transition-all border ${
-                    isSelected ? 'border-purple-500/60 bg-purple-950/30' : 'opacity-70'
+                    isSelected ? 'border-violet-300 bg-violet-50' : 'opacity-80 hover:opacity-100'
                   }`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-white">{t.label}</span>
-                    {isSelected && <Check className="w-4 h-4 text-purple-400" />}
+                    <span className="text-xs font-bold text-slate-950">{t.label}</span>
+                    {isSelected && <Check className="w-4 h-4 text-violet-700" />}
                   </div>
                   <p className="text-[11px] text-slate-400 mt-1">{t.desc}</p>
                 </div>
@@ -80,14 +80,14 @@ export const AIPolishModal: React.FC<AIPolishModalProps> = ({
         </div>
 
         {/* Footer Actions */}
-        <div className="p-4 border-t border-slate-800/80 flex items-center justify-end space-x-3 shrink-0 bg-slate-950/80 rounded-b-2xl">
-          <button onClick={onClose} className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold text-xs">
+        <div className="p-4 border-t border-slate-200 flex items-center justify-end space-x-3 shrink-0 bg-slate-50 rounded-b-xl">
+          <button onClick={onClose} className="px-4 py-2 rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 font-semibold text-xs">
             Cancel
           </button>
           <button
             onClick={() => onApplyPolish(selectedTone)}
             disabled={isPolishing}
-            className="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30 transition-all disabled:opacity-50 flex items-center"
+            className="px-5 py-2 rounded-lg bg-violet-600 hover:bg-violet-700 text-white font-bold text-xs transition-all disabled:opacity-50 flex items-center"
           >
             <Sparkles className={`w-4 h-4 mr-1.5 ${isPolishing ? 'animate-spin' : ''}`} />
             {isPolishing ? 'Polishing Entries...' : 'Apply AI Polish'}

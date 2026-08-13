@@ -135,13 +135,13 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-6 shadow-xl flex flex-col h-full">
+    <section className="glass-panel rounded-xl p-4 sm:p-5 flex flex-col h-full">
       
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
         <div>
-          <h2 className="text-base font-bold text-white tracking-tight flex items-center">
-            <Send className="w-4 h-4 mr-2 text-indigo-400" />
+          <h2 className="text-base font-bold text-slate-950 tracking-tight flex items-center">
+            <Send className="w-4 h-4 mr-2 text-blue-600" />
             Emit Auto-Fill & Dispatch Suite
           </h2>
           <p className="text-xs text-slate-400">Multiple ways to fill your timesheet on app.emit.work</p>
@@ -151,20 +151,20 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
           href="https://app.emit.work/"
           target="_blank"
           rel="noreferrer"
-          className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-medium text-indigo-400 flex items-center transition-colors"
+          className="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-xs font-medium text-blue-700 flex items-center justify-center transition-colors"
         >
           Open app.emit.work <ExternalLink className="w-3 h-3 ml-1.5" />
         </a>
       </div>
 
       {/* Tabs Header */}
-      <div className="flex items-center space-x-1 border-b border-slate-800 pb-2 mb-4 overflow-x-auto">
+      <div className="flex items-center space-x-1 border-b border-slate-200 pb-2 mb-4 overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab('api')}
           className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'api'
-              ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           <Send className="w-3.5 h-3.5 mr-1.5" />
@@ -175,8 +175,8 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
           onClick={() => setActiveTab('bookmarklet')}
           className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'bookmarklet'
-              ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           <Bookmark className="w-3.5 h-3.5 mr-1.5" />
@@ -187,8 +187,8 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
           onClick={() => setActiveTab('console')}
           className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'console'
-              ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           <Code className="w-3.5 h-3.5 mr-1.5" />
@@ -199,8 +199,8 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
           onClick={() => setActiveTab('export')}
           className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'export'
-              ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/30'
-              : 'text-slate-400 hover:text-slate-200'
+              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+              : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
           }`}
         >
           <Download className="w-3.5 h-3.5 mr-1.5" />
@@ -212,21 +212,21 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
       {activeTab === 'api' && (
         <div className="space-y-4">
           {!isConfigured ? (
-            <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-500/30 text-amber-300 text-xs flex items-center justify-between">
+            <div className="p-4 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center space-x-2">
-                <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+                <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
                 <span>Emit auth token is not configured. Add your token in settings to enable direct API posting.</span>
               </div>
               <button
                 onClick={onOpenSettings}
-                className="px-3 py-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 rounded-lg font-semibold text-xs transition-colors shrink-0 ml-2"
+                className="px-3 py-1 bg-white hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-lg font-semibold text-xs transition-colors shrink-0 sm:ml-2"
               >
                 Configure Token
               </button>
             </div>
           ) : (
-            <div className="p-3 rounded-xl bg-emerald-950/30 border border-emerald-500/30 text-emerald-300 text-xs flex items-center space-x-2">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+            <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center space-x-2">
+              <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
               <span>Token configured. Ready to post directly to <code>https://api.emit.work/member/activity</code>.</span>
             </div>
           )}
@@ -235,7 +235,7 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
             <button
               onClick={() => handleDispatch(false)}
               disabled={isPosting || activities.length === 0 || !isConfigured}
-              className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-indigo-600 hover:from-emerald-500 hover:to-indigo-500 text-white font-semibold text-xs shadow-lg shadow-emerald-600/20 flex items-center transition-all disabled:opacity-50"
+              className="px-5 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs flex items-center justify-center transition-all disabled:opacity-50"
             >
               <Send className="w-4 h-4 mr-2" />
               {isPosting ? 'Posting Activities...' : `Submit All (${activities.length} Entries)`}
@@ -244,10 +244,10 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
             <button
               onClick={() => handleDispatch(true)}
               disabled={isPosting || activities.length === 0 || !isConfigured}
-              className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 font-medium text-xs flex items-center transition-colors disabled:opacity-50"
+              className="px-4 py-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium text-xs flex items-center justify-center transition-colors disabled:opacity-50"
               title="Post only the 1st activity as a safe test"
             >
-              <Play className="w-3.5 h-3.5 mr-1.5 text-indigo-400" />
+              <Play className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
               Safe Test Single Entry
             </button>
 
@@ -255,23 +255,23 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
               <button
                 onClick={handleUndoBatchDelete}
                 disabled={isPosting}
-                className="px-4 py-2.5 rounded-xl bg-rose-950/60 hover:bg-rose-900/60 border border-rose-800/60 text-rose-300 font-semibold text-xs flex items-center transition-colors disabled:opacity-50"
+                className="px-4 py-2.5 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-semibold text-xs flex items-center justify-center transition-colors disabled:opacity-50"
                 title="Delete all entries posted in this session from app.emit.work"
               >
-                <Trash2 className="w-3.5 h-3.5 mr-1.5 text-rose-400" />
+                <Trash2 className="w-3.5 h-3.5 mr-1.5 text-rose-600" />
                 Undo / Delete Posted ({postedActivityIds.length})
               </button>
             )}
           </div>
 
           {progressMsg && (
-            <p className="text-xs font-mono text-indigo-300 bg-slate-900/90 p-2 rounded-lg border border-slate-800">
+            <p className="text-xs font-mono text-blue-700 bg-blue-50 p-2 rounded-lg border border-blue-100">
               {progressMsg}
             </p>
           )}
 
           {postLogs.length > 0 && (
-            <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 max-h-48 overflow-y-auto font-mono text-[11px] space-y-1">
+            <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 max-h-48 overflow-y-auto font-mono text-[11px] space-y-1">
               <div className="text-slate-500 font-semibold mb-1">Execution Logs:</div>
               {postLogs.map((log, i) => (
                 <div key={i} className={log.includes('SUCCESS') ? 'text-emerald-400' : 'text-rose-400'}>
@@ -286,15 +286,15 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
       {/* Tab 2: Bookmarklet */}
       {activeTab === 'bookmarklet' && (
         <div className="space-y-4 text-xs">
-          <p className="text-slate-300">
-            Drag the button below to your browser's <strong>Bookmarks bar</strong>. Then navigate to <a href="https://app.emit.work/" target="_blank" rel="noreferrer" className="text-indigo-400 underline">app.emit.work</a> while logged in and click the bookmark to auto-fill all generated entries!
+          <p className="text-slate-600">
+            Drag the button below to your browser's <strong>Bookmarks bar</strong>. Then navigate to <a href="https://app.emit.work/" target="_blank" rel="noreferrer" className="text-blue-700 underline">app.emit.work</a> while logged in and click the bookmark to auto-fill all generated entries!
           </p>
 
-          <div className="p-4 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center">
+          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
             <a
               href={bookmarkletHref}
               onClick={e => e.preventDefault()}
-              className="cursor-grab px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center space-x-2 border border-indigo-400/30 active:cursor-grabbing"
+              className="cursor-grab px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs flex items-center space-x-2 active:cursor-grabbing"
               title="Drag this button to your bookmarks bar"
             >
               <Bookmark className="w-4 h-4" />
@@ -302,8 +302,8 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
             </a>
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-900/60 border border-slate-800 text-slate-400 text-[11px]">
-            💡 <strong>Tip:</strong> If your browser hides the bookmarks bar, press <kbd className="bg-slate-800 px-1 py-0.5 rounded text-slate-200">Ctrl + Shift + B</kbd> (or <kbd className="bg-slate-800 px-1 py-0.5 rounded text-slate-200">Cmd + Shift + B</kbd> on Mac) to toggle it.
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-slate-500 text-[11px]">
+            <strong>Tip:</strong> If your browser hides the bookmarks bar, press <kbd className="bg-white border border-slate-200 px-1 py-0.5 rounded text-slate-700">Ctrl + Shift + B</kbd> (or <kbd className="bg-white border border-slate-200 px-1 py-0.5 rounded text-slate-700">Cmd + Shift + B</kbd> on Mac) to toggle it.
           </div>
         </div>
       )}
@@ -313,12 +313,12 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs text-slate-400 flex items-center">
-              <Terminal className="w-3.5 h-3.5 mr-1.5 text-indigo-400" />
+              <Terminal className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
               Chrome DevTools Snippet (Copy & Paste while logged in on app.emit.work)
             </span>
             <button
               onClick={handleCopyConsole}
-              className="px-3 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold flex items-center shadow-md transition-all"
+              className="px-3 py-1 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold flex items-center transition-all"
             >
               {copiedConsole ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
               {copiedConsole ? 'Copied!' : 'Copy Script'}
@@ -334,14 +334,14 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
       {/* Tab 4: Export */}
       {activeTab === 'export' && (
         <div className="space-y-4">
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-slate-600">
             Export generated timesheet entries for backup, managerial reporting, or manual copy-pasting.
           </p>
 
           <div className="flex items-center space-x-3">
             <button
               onClick={handleDownloadCSV}
-              className="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold flex items-center transition-colors"
+              className="px-4 py-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold flex items-center transition-colors"
             >
               <FileSpreadsheet className="w-4 h-4 mr-2 text-emerald-400" />
               Download CSV Spreadsheet
@@ -350,6 +350,6 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
         </div>
       )}
 
-    </div>
+    </section>
   );
 };

@@ -21,6 +21,12 @@ import { ToastContainer, ToastMessage } from './components/Toast';
 import { HelpCircle } from 'lucide-react';
 
 export const App: React.FC = () => {
+  const [themeMode, setThemeMode] = useState<'light' | 'dark'>(() => {
+    const saved = localStorage.getItem('emit_theme_mode');
+    if (saved === 'light' || saved === 'dark') return saved;
+    return window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  });
+
   // 1. Sentences state
   const [sentences, setSentences] = useState<SentenceItem[]>(() => {
     const saved = localStorage.getItem('emit_sentences');
@@ -115,6 +121,11 @@ export const App: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('emit_bitbucket_settings', JSON.stringify(bitbucketSettings));
   }, [bitbucketSettings]);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode;
+    localStorage.setItem('emit_theme_mode', themeMode);
+  }, [themeMode]);
 
   const handleUpdateBitbucketSettings = (newSettings: BitbucketSettings) => {
     setBitbucketSettings(newSettings);
@@ -257,7 +268,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#07090e] text-slate-100 flex flex-col font-sans ambient-bg">
+    <div className="app-shell min-h-screen text-slate-900 flex flex-col font-sans ambient-bg">
       
       {/* Top Navigation Header */}
       <Navbar
@@ -273,10 +284,36 @@ export const App: React.FC = () => {
         activeSentencesCount={activeSentencesCount}
         selectedProjectTag={config.defaultProjectTag}
         onSelectProjectTag={handleSelectProjectTag}
+        themeMode={themeMode}
+        onToggleTheme={() => setThemeMode(prev => prev === 'dark' ? 'light' : 'dark')}
       />
 
       {/* Main Workspace Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+        <section className="workspace-ribbon">
+          <div className="min-w-0">
+            <p className="workspace-kicker">Emit operations console</p>
+            <h2>Build a credible workday in minutes.</h2>
+            <p className="workspace-copy">
+              Generate, polish, audit, and dispatch timesheets without losing sight of the actual day plan.
+            </p>
+          </div>
+
+          <div className="workspace-metrics" aria-label="Timesheet summary">
+            <div>
+              <span>{totalGeneratedHours.toFixed(1)}h</span>
+              <small>Generated</small>
+            </div>
+            <div>
+              <span>{activeSentencesCount}</span>
+              <small>Active tasks</small>
+            </div>
+            <div>
+              <span>{config.defaultProjectTag}</span>
+              <small>Project</small>
+            </div>
+          </div>
+        </section>
         
         {/* Generator Controls */}
         <GeneratorControls
@@ -295,10 +332,10 @@ export const App: React.FC = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.2 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-6"
+            className="grid grid-cols-1 xl:grid-cols-12 gap-6"
           >
             {/* Left Column: Timeline Preview */}
-            <div className="lg:col-span-7 flex flex-col">
+            <div className="xl:col-span-7 flex flex-col">
               <TimelinePreview
                 activities={activities}
                 targetHours={config.targetHours}
@@ -309,7 +346,7 @@ export const App: React.FC = () => {
             </div>
 
             {/* Right Column: Emit Dispatch Suite */}
-            <div className="lg:col-span-5 flex flex-col">
+            <div className="xl:col-span-5 flex flex-col">
               <EmitIntegrationPanel
                 activities={activities}
                 emitSettings={emitSettings}
@@ -449,7 +486,7 @@ export const App: React.FC = () => {
       {/* Floating Bottom-Right Help Button */}
       <button
         onClick={() => setIsHelpOpen(true)}
-        className="fixed bottom-5 right-5 z-40 p-3 rounded-full bg-gradient-to-tr from-indigo-600 to-purple-600 text-white font-bold text-xs shadow-2xl shadow-indigo-600/50 hover:scale-110 active:scale-95 transition-all flex items-center justify-center group"
+        className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-40 p-3 rounded-full bg-white text-slate-700 font-bold text-xs shadow-lg border border-slate-200 hover:border-blue-300 hover:text-blue-700 active:scale-95 transition-all flex items-center justify-center group"
         title="Open Complete User Guide"
       >
         <HelpCircle className="w-5 h-5" />
@@ -461,8 +498,8 @@ export const App: React.FC = () => {
       <ToastContainer toasts={toasts} onDismiss={removeToast} />
 
       {/* Footer */}
-      <footer className="border-t border-white/[0.06] bg-slate-950/80 py-4 text-center text-xs text-slate-500">
-        Standalone Timesheet Generator for <a href="https://app.emit.work/" target="_blank" rel="noreferrer" className="text-indigo-400 hover:underline">app.emit.work</a> &bull; Ready for deployment to Vercel/Netlify
+      <footer className="border-t border-slate-200 bg-white/85 py-4 text-center text-xs text-slate-500">
+        Standalone Timesheet Generator for <a href="https://app.emit.work/" target="_blank" rel="noreferrer" className="text-blue-700 hover:underline">app.emit.work</a> &bull; Ready for deployment to Vercel/Netlify
       </footer>
 
     </div>
