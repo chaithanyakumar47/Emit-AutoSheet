@@ -102,10 +102,10 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <header className="topbar sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="min-h-16 sm:min-h-20 py-3 flex items-center justify-between gap-3">
+        <div className="min-h-16 sm:min-h-20 py-3 flex items-center justify-start gap-4">
           
           {/* Left: Bluestar Brand Logo & Workspace Dynamic Subtitle */}
-          <div className="flex items-center space-x-3 min-w-0 shrink">
+          <div className="flex w-[196px] flex-none items-center space-x-3 min-w-0">
             <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 flex items-center justify-center p-0.5 group hover:scale-[1.02] transition-transform shrink-0">
               <img src="/assets/emitus_logo.png" alt="Emitus Logo" className="w-full h-full object-contain rounded-lg" />
             </div>
@@ -123,7 +123,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     title="Click to switch active project tag"
                   >
                     <FolderKanban className="w-3 h-3 mr-1 text-blue-600 group-hover:scale-110 transition-transform shrink-0" />
-                    <span className="truncate max-w-[130px] sm:max-w-[220px]">{activeProjectLabel}</span>
+                    <span className="truncate max-w-[76px]">{activeProjectLabel}</span>
                     <ChevronDown className="w-3 h-3 ml-1 opacity-70" />
                   </button>
                   <span className="hidden sm:inline">&bull;</span>
@@ -196,7 +196,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </div>
 
           {/* Center: Desktop Navigation Tabs (Bluestar Royal Blue Theme) */}
-          <nav className="hidden xl:flex items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
+          <nav className="hidden xl:flex flex-none items-center space-x-1 bg-slate-100 p-1 rounded-xl border border-slate-200">
             {tabs.map(t => {
               const Icon = t.icon;
               const isActive = activeTab === t.id;
@@ -225,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right: Actions Bar (Status Badge & Quick Action Buttons) */}
-          <div className="flex items-center space-x-2 shrink-0">
+          <div className="ml-auto flex items-center space-x-2 shrink-0">
             
             {/* Token Status Badge */}
             <button
