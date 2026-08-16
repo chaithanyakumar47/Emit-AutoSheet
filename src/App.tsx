@@ -289,7 +289,7 @@ export const App: React.FC = () => {
       />
 
       {/* Main Workspace Container */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-5 sm:space-y-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-4 sm:space-y-6">
         <section className="workspace-ribbon">
           <div className="min-w-0">
             <p className="workspace-kicker">Emit operations console</p>
@@ -486,11 +486,11 @@ export const App: React.FC = () => {
       {/* Floating Bottom-Right Help Button */}
       <button
         onClick={() => setIsHelpOpen(true)}
-        className="fixed bottom-4 right-4 sm:bottom-5 sm:right-5 z-40 p-3 rounded-full bg-white text-slate-700 font-bold text-xs shadow-lg border border-slate-200 hover:border-blue-300 hover:text-blue-700 active:scale-95 transition-all flex items-center justify-center group"
+        className="fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-40 p-2.5 sm:p-3 rounded-full bg-white text-slate-700 font-bold text-xs shadow-lg border border-slate-200 hover:border-blue-300 hover:text-blue-700 active:scale-95 transition-all flex items-center justify-center group"
         title="Open Complete User Guide"
       >
-        <HelpCircle className="w-5 h-5" />
-        <span className="max-w-0 overflow-hidden group-hover:max-w-xs group-hover:ml-2 transition-all duration-300 whitespace-nowrap text-xs font-semibold">
+        <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+        <span className="hidden sm:inline max-w-0 overflow-hidden group-hover:max-w-xs group-hover:ml-2 transition-all duration-300 whitespace-nowrap text-xs font-semibold">
           User Guide
         </span>
       </button>

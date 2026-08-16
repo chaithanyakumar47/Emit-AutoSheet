@@ -101,12 +101,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="topbar sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="min-h-16 sm:min-h-20 py-3 flex items-center justify-start gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="min-h-16 sm:min-h-20 py-3 flex items-center justify-start gap-2 sm:gap-4">
           
           {/* Left: Bluestar Brand Logo & Workspace Dynamic Subtitle */}
-          <div className="flex w-[196px] flex-none items-center space-x-3 min-w-0">
-            <div className="w-10 h-10 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 flex items-center justify-center p-0.5 group hover:scale-[1.02] transition-transform shrink-0">
+          <div className="flex flex-1 sm:w-[196px] sm:flex-none items-center space-x-2.5 sm:space-x-3 min-w-0">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 flex items-center justify-center p-0.5 group hover:scale-[1.02] transition-transform shrink-0">
               <img src="/assets/emitus_logo.png" alt="Emitus Logo" className="w-full h-full object-contain rounded-lg" />
             </div>
             <div className="min-w-0">
@@ -123,15 +123,15 @@ export const Navbar: React.FC<NavbarProps> = ({
                     title="Click to switch active project tag"
                   >
                     <FolderKanban className="w-3 h-3 mr-1 text-blue-600 group-hover:scale-110 transition-transform shrink-0" />
-                    <span className="truncate max-w-[76px]">{activeProjectLabel}</span>
+                    <span className="truncate max-w-[64px] sm:max-w-[76px]">{activeProjectLabel}</span>
                     <ChevronDown className="w-3 h-3 ml-1 opacity-70" />
                   </button>
-                  <span className="hidden sm:inline">&bull;</span>
+                  <span className="hidden md:inline">&bull;</span>
                   <a
                     href="https://app.emit.work/"
                     target="_blank"
                     rel="noreferrer"
-                    className="hidden sm:inline-flex items-center text-slate-500 hover:text-blue-700 transition-colors"
+                    className="hidden md:inline-flex items-center text-slate-500 hover:text-blue-700 transition-colors"
                   >
                     app.emit.work <ExternalLink className="w-3 h-3 ml-1" />
                   </a>
@@ -225,19 +225,19 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           {/* Right: Actions Bar (Status Badge & Quick Action Buttons) */}
-          <div className="ml-auto flex items-center space-x-2 shrink-0">
+          <div className="ml-auto flex items-center space-x-1.5 sm:space-x-2 shrink-0">
             
             {/* Token Status Badge */}
             <button
               onClick={onOpenSettings}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center transition-all border whitespace-nowrap ${
+              className={`p-2 sm:px-3 sm:py-1.5 rounded-lg text-xs font-semibold flex items-center transition-all border whitespace-nowrap ${
                 isEmitConfigured
                   ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
                   : 'bg-amber-50 text-amber-800 border-amber-200 hover:bg-amber-100'
               }`}
               title="Connections Settings"
             >
-              <ShieldCheck className={`w-3.5 h-3.5 mr-1.5 shrink-0 ${isEmitConfigured ? 'text-emerald-700' : 'text-amber-700'}`} />
+              <ShieldCheck className={`w-3.5 h-3.5 sm:mr-1.5 shrink-0 ${isEmitConfigured ? 'text-emerald-700' : 'text-amber-700'}`} />
               <span className="hidden sm:inline">{isEmitConfigured ? 'Token Connected' : 'Setup Token'}</span>
             </button>
 
@@ -245,10 +245,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             {onOpenAuditModal && (
               <button
                 onClick={onOpenAuditModal}
-                className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 transition-colors flex items-center shrink-0"
+                className="p-2 sm:px-2.5 sm:py-1.5 rounded-lg text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 transition-colors flex items-center shrink-0"
                 title="Audit & Batch Delete Mistakes / Holidays from Emit"
               >
-                <Trash2 className="w-3.5 h-3.5 mr-1.5 text-rose-600" />
+                <Trash2 className="w-3.5 h-3.5 sm:mr-1.5 text-rose-600" />
                 <span className="hidden sm:inline">Audit / Delete</span>
               </button>
             )}
@@ -290,7 +290,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="xl:hidden bg-white border-b border-slate-200 px-4 py-3 space-y-1.5"
+          className="xl:hidden topbar border-b border-slate-200 px-3 sm:px-4 py-3 space-y-1.5"
         >
           {tabs.map(t => {
             const Icon = t.icon;

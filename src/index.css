@@ -475,6 +475,43 @@ html[data-theme='dark'] footer {
   }
 }
 
+@media (max-width: 480px) {
+  .topbar {
+    backdrop-filter: blur(18px) saturate(1.18);
+  }
+
+  .workspace-ribbon {
+    padding: 16px;
+    gap: 14px;
+  }
+
+  .workspace-ribbon h2 {
+    font-size: 26px;
+    line-height: 1;
+  }
+
+  .workspace-copy {
+    font-size: 12px;
+  }
+
+  .workspace-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .workspace-metrics div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 11px 12px;
+  }
+
+  .workspace-metrics small {
+    margin-top: 0;
+    text-align: right;
+  }
+}
+
 /* W3C Standard & Webkit Scrollbar */
 * {
   scrollbar-width: thin;

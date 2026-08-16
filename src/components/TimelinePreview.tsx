@@ -63,15 +63,15 @@ export const TimelinePreview: React.FC<TimelinePreviewProps> = ({
       
       {/* Top Header & Hours Progress Bar */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center space-x-2 min-w-0">
             <h2 className="text-sm font-bold text-slate-950 tracking-tight">Timesheet Timeline</h2>
             <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-blue-50 text-blue-700 border border-blue-200">
               {activities.length} Tasks
             </span>
           </div>
 
-          <div className="flex items-center space-x-2 text-xs">
+          <div className="flex items-center space-x-2 text-xs sm:justify-end">
             <span className="text-slate-400">Total:</span>
             <span className={`font-bold ${totalHours >= targetHours ? 'text-emerald-700' : 'text-blue-700'}`}>
               {totalHours.toFixed(1)}h / {targetHours}h
@@ -102,7 +102,7 @@ export const TimelinePreview: React.FC<TimelinePreviewProps> = ({
           return (
             <div
               key={act.id}
-              className={`card-surface p-4 rounded-xl relative group border transition-all ${
+              className={`card-surface p-3 sm:p-4 rounded-xl relative group border transition-all ${
                 isPosted
                   ? 'border-emerald-200 bg-emerald-50/70'
                   : act.status === 'failed'
@@ -113,17 +113,17 @@ export const TimelinePreview: React.FC<TimelinePreviewProps> = ({
               <div className="flex flex-col space-y-2">
                 
                 {/* Meta Bar: Times, Badges & Actions */}
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+                <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-2">
                   
                   {/* Left: Start/End Time & Duration Controls */}
-                  <div className="flex items-center space-x-2 flex-wrap gap-y-1">
-                    <span className="text-xs font-bold text-slate-900 font-mono flex items-center bg-slate-50 px-2 py-0.5 rounded border border-slate-200">
+                  <div className="flex items-center flex-wrap gap-1.5 sm:gap-2">
+                    <span className="text-[11px] sm:text-xs font-bold text-slate-900 font-mono flex items-center bg-slate-50 px-2 py-1 sm:py-0.5 rounded border border-slate-200">
                       <Clock className="w-3 h-3 mr-1.5 text-blue-600" />
                       {act.startTime} &ndash; {act.endTime}
                     </span>
 
                     {/* Duration adjust */}
-                    <div className="flex items-center space-x-0.5 bg-slate-50 px-1 py-0.5 rounded border border-slate-200 text-[11px] text-slate-600">
+                    <div className="flex items-center space-x-0.5 bg-slate-50 px-1 py-1 sm:py-0.5 rounded border border-slate-200 text-[11px] text-slate-600">
                       <button
                         onClick={() => handleAdjustDuration(act, -15)}
                         className="p-0.5 hover:text-slate-950 text-slate-500 transition-colors"
@@ -142,18 +142,19 @@ export const TimelinePreview: React.FC<TimelinePreviewProps> = ({
                     </div>
 
                     {/* Category & Project Badges */}
-                    <span className={`px-2 py-0.5 text-[10px] font-semibold rounded ${badgeClass}`}>
+                    <span className={`max-w-full truncate px-2 py-1 sm:py-0.5 text-[10px] font-semibold rounded ${badgeClass}`}>
                       {act.category}
                     </span>
 
-                    <span className="px-2 py-0.5 text-[10px] font-semibold rounded bg-slate-50 text-blue-700 border border-slate-200 flex items-center">
+                    <span className="px-2 py-1 sm:py-0.5 text-[10px] font-semibold rounded bg-slate-50 text-blue-700 border border-slate-200 flex items-center">
                       <Hash className="w-2.5 h-2.5 mr-0.5 text-blue-600" />
                       {act.projectId || '#BLS'}
                     </span>
                   </div>
 
                   {/* Right: Status & Hover Actions */}
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-between sm:justify-end gap-2">
+                    <div className="flex flex-wrap items-center gap-1.5">
                     {act.isAiPolished && (
                       <span className="inline-flex items-center text-[10px] font-semibold px-2 py-0.5 rounded bg-violet-50 text-violet-700 border border-violet-200">
                         <Sparkles className="w-2.5 h-2.5 mr-1 text-violet-600" />
@@ -174,10 +175,11 @@ export const TimelinePreview: React.FC<TimelinePreviewProps> = ({
                         Failed
                       </span>
                     )}
+                    </div>
 
                     {/* Touch & Hover Action Buttons */}
                     {!isEditing && (
-                      <div className="flex items-center space-x-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                      <div className="flex items-center space-x-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity shrink-0">
                         {isPosted && onDeleteFromEmit && (
                           <button
                             onClick={() => onDeleteFromEmit(act)}

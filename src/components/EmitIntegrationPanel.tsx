@@ -158,10 +158,10 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
       </div>
 
       {/* Tabs Header */}
-      <div className="flex items-center space-x-1 border-b border-slate-200 pb-2 mb-4 overflow-x-auto scrollbar-none">
+      <div className="grid grid-cols-2 sm:flex sm:items-center gap-1 sm:space-x-1 border-b border-slate-200 pb-2 mb-4 overflow-visible sm:overflow-x-auto scrollbar-none">
         <button
           onClick={() => setActiveTab('api')}
-          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
+          className={`w-full sm:w-auto justify-center px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'api'
               ? 'bg-blue-50 text-blue-700 border border-blue-200'
               : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -173,7 +173,7 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
 
         <button
           onClick={() => setActiveTab('bookmarklet')}
-          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
+          className={`w-full sm:w-auto justify-center px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'bookmarklet'
               ? 'bg-blue-50 text-blue-700 border border-blue-200'
               : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -185,7 +185,7 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
 
         <button
           onClick={() => setActiveTab('console')}
-          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
+          className={`w-full sm:w-auto justify-center px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'console'
               ? 'bg-blue-50 text-blue-700 border border-blue-200'
               : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -197,7 +197,7 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
 
         <button
           onClick={() => setActiveTab('export')}
-          className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
+          className={`w-full sm:w-auto justify-center px-2 sm:px-3 py-2 sm:py-1.5 text-xs font-semibold rounded-lg transition-all flex items-center ${
             activeTab === 'export'
               ? 'bg-blue-50 text-blue-700 border border-blue-200'
               : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50'
@@ -231,11 +231,11 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
             </div>
           )}
 
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="grid grid-cols-1 sm:flex sm:flex-wrap sm:items-center gap-2 sm:gap-3">
             <button
               onClick={() => handleDispatch(false)}
               disabled={isPosting || activities.length === 0 || !isConfigured}
-              className="px-5 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs flex items-center justify-center transition-all disabled:opacity-50"
+              className="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs flex items-center justify-center transition-all disabled:opacity-50"
             >
               <Send className="w-4 h-4 mr-2" />
               {isPosting ? 'Posting Activities...' : `Submit All (${activities.length} Entries)`}
@@ -244,7 +244,7 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
             <button
               onClick={() => handleDispatch(true)}
               disabled={isPosting || activities.length === 0 || !isConfigured}
-              className="px-4 py-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium text-xs flex items-center justify-center transition-colors disabled:opacity-50"
+              className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-medium text-xs flex items-center justify-center transition-colors disabled:opacity-50"
               title="Post only the 1st activity as a safe test"
             >
               <Play className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
@@ -255,7 +255,7 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
               <button
                 onClick={handleUndoBatchDelete}
                 disabled={isPosting}
-                className="px-4 py-2.5 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-semibold text-xs flex items-center justify-center transition-colors disabled:opacity-50"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-lg bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-semibold text-xs flex items-center justify-center transition-colors disabled:opacity-50"
                 title="Delete all entries posted in this session from app.emit.work"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1.5 text-rose-600" />
@@ -290,11 +290,11 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
             Drag the button below to your browser's <strong>Bookmarks bar</strong>. Then navigate to <a href="https://app.emit.work/" target="_blank" rel="noreferrer" className="text-blue-700 underline">app.emit.work</a> while logged in and click the bookmark to auto-fill all generated entries!
           </p>
 
-          <div className="p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
+          <div className="p-3 sm:p-4 rounded-lg bg-slate-50 border border-slate-200 flex items-center justify-center">
             <a
               href={bookmarkletHref}
               onClick={e => e.preventDefault()}
-              className="cursor-grab px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs flex items-center space-x-2 active:cursor-grabbing"
+              className="cursor-grab w-full sm:w-auto px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs flex items-center justify-center space-x-2 active:cursor-grabbing"
               title="Drag this button to your bookmarks bar"
             >
               <Bookmark className="w-4 h-4" />
@@ -311,21 +311,21 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
       {/* Tab 3: Console Script */}
       {activeTab === 'console' && (
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
             <span className="text-xs text-slate-400 flex items-center">
               <Terminal className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
               Chrome DevTools Snippet (Copy & Paste while logged in on app.emit.work)
             </span>
             <button
               onClick={handleCopyConsole}
-              className="px-3 py-1 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold flex items-center transition-all"
+              className="w-full sm:w-auto justify-center px-3 py-2 sm:py-1 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold flex items-center transition-all"
             >
               {copiedConsole ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
               {copiedConsole ? 'Copied!' : 'Copy Script'}
             </button>
           </div>
 
-          <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 max-h-48 overflow-y-auto whitespace-pre">
+          <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 font-mono text-[11px] text-slate-300 max-h-48 overflow-auto whitespace-pre">
             {consoleScript}
           </div>
         </div>
@@ -338,10 +338,10 @@ export const EmitIntegrationPanel: React.FC<EmitIntegrationPanelProps> = ({
             Export generated timesheet entries for backup, managerial reporting, or manual copy-pasting.
           </p>
 
-          <div className="flex items-center space-x-3">
+          <div className="grid grid-cols-1 sm:flex sm:items-center gap-2 sm:gap-3">
             <button
               onClick={handleDownloadCSV}
-              className="px-4 py-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold flex items-center transition-colors"
+              className="w-full sm:w-auto justify-center px-4 py-2.5 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold flex items-center transition-colors"
             >
               <FileSpreadsheet className="w-4 h-4 mr-2 text-emerald-400" />
               Download CSV Spreadsheet
