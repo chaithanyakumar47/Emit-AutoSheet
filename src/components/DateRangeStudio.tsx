@@ -244,7 +244,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
       {/* Date Range Picker & Controls */}
       <div className="glass-panel rounded-xl p-4 sm:p-5 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h2 className="text-base sm:text-lg font-bold text-slate-950 tracking-tight flex items-center">
               <Calendar className="w-5 h-5 mr-2 text-blue-600" />
               Date Range Bulk Push &amp; Gap Filling Studio
@@ -278,7 +278,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
 
         {/* Inputs Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 pt-3 border-t border-slate-200">
-          <div>
+          <div className="min-w-0">
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Start Date
             </label>
@@ -290,7 +290,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             />
           </div>
 
-          <div>
+          <div className="min-w-0">
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               End Date
             </label>
@@ -307,7 +307,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Hours / Day
             </label>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-1 min-w-0">
               {targetHourPresets.map(hrs => (
                 <button
                   key={hrs}
@@ -325,7 +325,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
           </div>
 
           {/* Bulk Tasks per Day Selector */}
-          <div>
+          <div className="min-w-0">
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1 flex items-center">
               <Sliders className="w-3 h-3 mr-1" />
               Tasks / Day
@@ -347,7 +347,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             </select>
           </div>
 
-          <div className="flex items-center pt-2 sm:pt-6">
+          <div className="flex items-center pt-2 sm:pt-6 min-w-0">
             <label className="flex items-center cursor-pointer space-x-2 text-xs text-slate-600">
               <input
                 type="checkbox"
@@ -417,7 +417,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 w-full sm:w-auto">
+        <div className="flex items-center space-x-2 w-full sm:w-auto min-w-0">
           <button
             onClick={handleFillAllMissingDays}
             disabled={missingGapDays.length === 0}
@@ -574,10 +574,10 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                 </div>
 
                 {/* Day Card Controls & Actions Footer */}
-                <div className="space-y-2 pt-1 border-t border-slate-200/60">
+                <div className="space-y-2 pt-1 border-t border-slate-200/60 min-w-0">
                   
                   {/* Per-Day Task Count Override Bar */}
-                  <div className="flex items-center justify-between text-[11px] text-slate-400">
+                  <div className="flex items-center justify-between text-[11px] text-slate-400 gap-2 min-w-0">
                     <span>Tasks count:</span>
                     <select
                       value={String(dayTaskCountSetting)}
@@ -586,7 +586,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                         setCustomDayTaskCounts(prev => ({ ...prev, [day.dateStr]: val }));
                         handleFillSingleDay(day.dateStr, val);
                       }}
-                      className="bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] text-violet-700 font-semibold focus:outline-none"
+                      className="w-auto max-w-[120px] bg-white border border-slate-200 rounded px-1.5 py-0.5 text-[10px] text-violet-700 font-semibold focus:outline-none"
                     >
                       <option value="auto">Auto</option>
                       <option value="1">1 Task</option>
@@ -662,7 +662,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
             <div className="p-5 space-y-4 overflow-y-auto flex-1 scrollbar-none">
               
               {/* Task Count Override Control inside Modal */}
-              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-2 min-w-0">
                 <span className="text-xs font-semibold text-slate-700">Generated Tasks Count for {selectedDay.dateStr}:</span>
                 <select
                   value={String(customDayTaskCounts[selectedDay.dateStr] ?? targetTaskCountPerDay)}
@@ -671,7 +671,7 @@ export const DateRangeStudio: React.FC<DateRangeStudioProps> = ({
                     setCustomDayTaskCounts(prev => ({ ...prev, [selectedDay.dateStr]: val }));
                     handleFillSingleDay(selectedDay.dateStr, val);
                   }}
-                  className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs text-violet-700 font-semibold focus:outline-none"
+                  className="w-full sm:w-auto bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs text-violet-700 font-semibold focus:outline-none"
                 >
                   <option value="auto">Auto (Varied)</option>
                   <option value="1">1 Task / Day</option>

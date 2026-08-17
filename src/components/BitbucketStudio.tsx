@@ -213,7 +213,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
       {/* Bitbucket Connection & Credentials Panel */}
       <div className="glass-panel rounded-xl p-4 sm:p-5 space-y-4">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
+          <div className="min-w-0">
             <h2 className="text-base sm:text-lg font-bold text-slate-950 tracking-tight flex items-center">
               <FolderGit2 className="w-5 h-5 mr-2 text-blue-600" />
               Bitbucket Developer Mode &amp; Commit Balancer
@@ -275,7 +275,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
       {/* Date Range & Commit Fetch Control Bar */}
       <div className="glass-panel p-4 sm:p-5 rounded-xl space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div>
+          <div className="min-w-0">
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Start Date
             </label>
@@ -287,7 +287,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
             />
           </div>
 
-          <div>
+          <div className="min-w-0">
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               End Date
             </label>
@@ -304,7 +304,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Hours / Day
             </label>
-            <div className="flex items-center space-x-1">
+            <div className="flex items-center space-x-1 min-w-0">
               {targetHourPresets.map(hrs => (
                 <button
                   key={hrs}
@@ -321,7 +321,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
             </div>
           </div>
 
-          <div className="flex items-center pt-2 sm:pt-6">
+          <div className="flex items-center pt-2 sm:pt-6 min-w-0">
             <label className="flex items-center cursor-pointer space-x-2 text-xs text-slate-600">
               <input
                 type="checkbox"
@@ -333,7 +333,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
             </label>
           </div>
 
-          <div className="flex items-end">
+          <div className="flex items-end min-w-0">
             <button
               onClick={handleFetchAndBalance}
               disabled={isFetchingCommits}

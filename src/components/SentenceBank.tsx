@@ -199,7 +199,7 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col md:flex-row items-center gap-3">
-        <div className="relative flex-1 w-full">
+        <div className="relative flex-1 w-full min-w-0">
           <Search className="w-4 h-4 absolute left-3.5 top-2.5 text-slate-400" />
           <input
             type="text"
@@ -244,7 +244,7 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
 
       {/* Add New Task Form Drawer */}
       {isAddingNew && (
-        <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 space-y-3">
+        <div className="p-4 rounded-lg bg-blue-50 border border-blue-200 space-y-3 min-w-0">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-blue-700">Add Custom Activity Sentence</span>
             <button onClick={() => setIsAddingNew(false)} className="text-slate-500 hover:text-slate-950 p-1">
@@ -258,11 +258,11 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
             onChange={e => setNewText(e.target.value)}
             className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-sans"
           />
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 min-w-0">
             <select
               value={newCategory}
               onChange={e => setNewCategory(e.target.value as Category)}
-              className="bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none"
+              className="w-full sm:w-auto bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none"
             >
               {CATEGORIES.map(c => (
                 <option key={c} value={c}>{c}</option>
@@ -302,12 +302,12 @@ export const SentenceBank: React.FC<SentenceBankProps> = ({
               {/* Text Body */}
               <div className="flex-1 min-w-0">
                 {isEditing ? (
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 min-w-0">
                     <input
                       type="text"
                       value={editText}
                       onChange={e => setEditText(e.target.value)}
-                      className="flex-1 bg-white border border-blue-300 rounded-lg px-2.5 py-1 text-xs text-slate-900 focus:outline-none"
+                      className="flex-1 min-w-0 bg-white border border-blue-300 rounded-lg px-2.5 py-1 text-xs text-slate-900 focus:outline-none"
                     />
                     <button onClick={() => handleSaveEdit(s)} className="p-1 text-emerald-700 hover:bg-emerald-50 rounded">
                       <Check className="w-4 h-4" />

@@ -211,7 +211,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
         <div className="p-5 space-y-5 overflow-y-auto flex-1 scrollbar-none">
           
           {/* Token & Auth Header Section */}
-          <div className="space-y-2 p-4 rounded-lg bg-slate-50 border border-slate-200">
+          <div className="space-y-2 p-4 rounded-lg bg-slate-50 border border-slate-200 min-w-0">
             <label className="text-xs font-semibold text-blue-700 uppercase block">
               1. Emit Bearer / Auth Token (Required)
             </label>
@@ -222,7 +222,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               placeholder="Paste raw JWT token string here..."
               className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs text-slate-900 focus:outline-none focus:border-blue-500 font-mono resize-y"
             />
-            <div className="flex items-center justify-between pt-1">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-1 min-w-0">
               <p className="text-[11px] text-slate-400">Sent as <code>Token: &lt;jwt_string&gt;</code> header to <code>api.emit.work</code>.</p>
               <button
                 onClick={handleFetchProfileFromApi}
@@ -236,8 +236,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* Bitbucket Cloud Integration Section (matching emitation.vercel.app) */}
-          <div className="space-y-3 p-4 rounded-lg bg-slate-50 border border-slate-200">
-            <div className="flex items-center justify-between">
+          <div className="space-y-3 p-4 rounded-lg bg-slate-50 border border-slate-200 min-w-0">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 min-w-0">
               <label className="text-xs font-bold text-blue-700 uppercase flex items-center">
                 <FolderGit2 className="w-4 h-4 mr-1.5" />
                 2. Bitbucket Integration (Developer Mode)
@@ -254,7 +254,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
+              <div className="min-w-0">
                 <label className="text-[11px] font-semibold text-slate-500 block mb-1">
                   Atlassian Account Email
                 </label>
@@ -267,7 +267,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label className="text-[11px] font-semibold text-slate-500 block mb-1">
                   API Token / App Password
                 </label>
@@ -280,7 +280,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label className="text-[11px] font-semibold text-slate-500 block mb-1">
                   Workspaces (Optional)
                 </label>
@@ -293,7 +293,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 />
               </div>
 
-              <div>
+              <div className="min-w-0">
                 <label className="text-[11px] font-semibold text-slate-500 block mb-1">
                   Commit Emails (Optional)
                 </label>
@@ -307,7 +307,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-1">
+            <div className="flex items-center justify-between pt-1 min-w-0">
               <label className="flex items-center space-x-2 text-xs text-slate-600 cursor-pointer">
                 <input
                   type="checkbox"
@@ -321,13 +321,13 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
 
           {/* AI Settings Section */}
-          <div className="space-y-3 p-4 rounded-lg bg-slate-50 border border-slate-200">
+          <div className="space-y-3 p-4 rounded-lg bg-slate-50 border border-slate-200 min-w-0">
             <label className="text-xs font-semibold text-violet-700 uppercase block">
               3. AI Assistance &amp; Polishing Provider
             </label>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
+              <div className="min-w-0">
                 <label className="text-[11px] font-semibold text-slate-500 block mb-1">AI Provider</label>
                 <select
                   value={aiProvider}
@@ -342,7 +342,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
               </div>
 
               {aiProvider !== 'built-in' && (
-                <div>
+                <div className="min-w-0">
                   <label className="text-[11px] font-semibold text-slate-500 block mb-1">API Key</label>
                   <input
                     type="password"

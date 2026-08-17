@@ -166,7 +166,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     {/* Custom Tag Input */}
                     <div className="pt-1 border-t border-slate-200 mt-1">
                       {isCustomTagInput ? (
-                        <form onSubmit={handleCustomSubmit} className="flex items-center space-x-1 p-1">
+                        <form onSubmit={handleCustomSubmit} className="flex items-center space-x-1 p-1 min-w-0">
                           <input
                             type="text"
                             placeholder="#ProjectTag"

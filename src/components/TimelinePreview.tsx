@@ -213,12 +213,12 @@ export const TimelinePreview: React.FC<TimelinePreviewProps> = ({
                 {/* Body Text / Inline Edit */}
                 <div>
                   {isEditing ? (
-                    <div className="flex items-center space-x-2 pt-1">
+                    <div className="flex items-center space-x-2 pt-1 min-w-0">
                       <textarea
                         rows={2}
                         value={editText}
                         onChange={e => setEditText(e.target.value)}
-                        className="flex-1 bg-white border border-blue-300 rounded-lg p-2 text-xs text-slate-900 focus:outline-none font-sans resize-y"
+                        className="flex-1 min-w-0 bg-white border border-blue-300 rounded-lg p-2 text-xs text-slate-900 focus:outline-none font-sans resize-y"
                       />
                       <div className="flex flex-col space-y-1">
                         <button onClick={() => handleSaveEdit(act)} className="p-1.5 text-emerald-700 hover:bg-emerald-50 rounded">

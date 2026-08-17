@@ -34,12 +34,12 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
         
         {/* 1. Target Hours Selector */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 min-w-0">
           <label className="text-[11px] font-semibold text-slate-500 uppercase flex items-center">
             <Clock className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
             Target Work Hours
           </label>
-          <div className="grid grid-cols-5 gap-1 pb-0.5">
+          <div className="grid grid-cols-5 gap-1 pb-0.5 min-w-0">
             {targetHourPresets.map(hrs => {
               const isSelected = config.targetHours === hrs;
               return (
@@ -60,7 +60,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
         </div>
 
         {/* 2. Work Date Picker */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 min-w-0">
           <label className="text-[11px] font-semibold text-slate-500 uppercase flex items-center">
             <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
             Work Date
@@ -74,7 +74,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
         </div>
 
         {/* 3. Start Time Selector */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 min-w-0">
           <label className="text-[11px] font-semibold text-slate-500 uppercase flex items-center">
             <Clock className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
             Start Time
@@ -88,7 +88,7 @@ export const GeneratorControls: React.FC<GeneratorControlsProps> = ({
         </div>
 
         {/* 4. Project Tag Selector */}
-        <div className="space-y-1.5">
+        <div className="space-y-1.5 min-w-0">
           <label className="text-[11px] font-semibold text-slate-500 uppercase flex items-center">
             <Hash className="w-3.5 h-3.5 mr-1.5 text-blue-600" />
             Project Tag
