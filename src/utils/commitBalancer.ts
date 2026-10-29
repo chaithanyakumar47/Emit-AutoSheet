@@ -14,11 +14,73 @@ export interface BalancedDayResult {
   isWeekend: boolean;
   isCompanyHoliday: boolean;
   holidayName?: string;
-  source: 'commits' | 'overflow' | 'emit_history' | 'sentence_bank';
+  source: 'commits' | 'overflow' | 'emit_history' | 'sentence_bank' | 'already_filled';
   commitCount: number;
   activities: GeneratedActivity[];
+  existingActivityCount: number;
+  existingHours: number;
   totalHours: number;
+  combinedHours: number;
+  targetHours: number;
+  remainingHours: number;
 }
+interface ExistingDayStats {
+  activityCount: number;
+  totalMinutes: number;
+  latestEndMs?: number;
+}
+
+function getActivityDate(activity: any): Date | null {
+  const rawDate = activity?.date;
+  if (rawDate === undefined || rawDate === null || rawDate === '') return null;
+  const date = new Date(rawDate);
+  return Number.isNaN(date.getTime()) ? null : date;
+}
+
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+function getActivityMinutes(activity: any): number {
+  const timeHours = typeof activity?.time === 'number' ? activity.time : Number(activity?.time);
+  if (Number.isFinite(timeHours) && timeHours > 0) return Math.round(timeHours * 60);
+
+  const durationMinutes = typeof activity?.durationMinutes === 'number'
+    ? activity.durationMinutes
+    : Number(activity?.durationMinutes);
+  return Number.isFinite(durationMinutes) && durationMinutes > 0 ? Math.round(durationMinutes) : 0;
+}
+
+function getExistingStatsByDate(activities: any[]): Record<string, ExistingDayStats> {
+  const statsByDate: Record<string, ExistingDayStats> = {};
+  activities.forEach(activity => {
+    const activityDate = getActivityDate(activity);
+    if (!activityDate) return;
+
+    const dateStr = formatLocalDate(activityDate);
+    const minutes = getActivityMinutes(activity);
+    const current = statsByDate[dateStr] || { activityCount: 0, totalMinutes: 0 };
+    current.activityCount += 1;
+    current.totalMinutes += minutes;
+    current.latestEndMs = Math.max(current.latestEndMs || 0, activityDate.getTime() + minutes * 60 * 1000);
+    statsByDate[dateStr] = current;
+  });
+  return statsByDate;
+}
+
+function formatTimeHHMM(epochMs: number): string {
+  const date = new Date(epochMs);
+  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
+}
+
+function getTaskCountForRemainingMinutes(desiredCount: number, remainingMinutes: number): number | undefined {
+  if (remainingMinutes < 15) return undefined;
+  return Math.max(1, Math.min(desiredCount, Math.floor(remainingMinutes / 15)));
+}
+
 
 /**
  * Balance Bitbucket commits across date range and fill zero-commit gap days using past Emit history
@@ -31,6 +93,13 @@ export function balanceCommitsAcrossDateRange(
   includeWeekends: boolean = false,
   fetchedEmitActivities: any[] = []
 ): BalancedDayResult[] {
+  const targetMinutes = Math.max(0, Math.round(baseConfig.targetHours * 60));
+  const existingStatsByDate = getExistingStatsByDate(fetchedEmitActivities);
+  const getRemainingMinutes = (dateStr: string) => Math.max(
+    0,
+    targetMinutes - (existingStatsByDate[dateStr]?.totalMinutes || 0)
+  );
+
   // 1. Group commits by dateStr YYYY-MM-DD
   const commitsByDate: Record<string, BitbucketCommit[]> = {};
   const uniqueCommits = dedupeBitbucketCommits(commits);
@@ -45,7 +114,9 @@ export function balanceCommitsAcrossDateRange(
     const dayNum = dObj.getDay();
     const isWeekend = dayNum === 0 || dayNum === 6;
     const isCompanyHoliday = getCompanyHolidayInfo(dStr).isHoliday;
-    return (!isWeekend || includeWeekends) && !isCompanyHoliday;
+    return (!isWeekend || includeWeekends)
+      && !isCompanyHoliday
+      && getRemainingMinutes(dStr) > 0;
   });
 
   // 2. Spread commits across working days
@@ -55,7 +126,12 @@ export function balanceCommitsAcrossDateRange(
 
   dateStrs.forEach(dStr => {
     const dayCommits = commitsByDate[dStr] || [];
-    if (dayCommits.length > 3) {
+    const canAcceptCommits = workingDateStrs.includes(dStr);
+
+    if (!canAcceptCommits) {
+      dayCommitMap[dStr] = [];
+      overflowPool.push(...dayCommits);
+    } else if (dayCommits.length > 3) {
       dayCommitMap[dStr] = dayCommits.slice(0, 3);
       overflowPool.push(...dayCommits.slice(3));
     } else {
@@ -116,6 +192,9 @@ export function balanceCommitsAcrossDateRange(
     const dayOfWeek = dateObj.toLocaleDateString('en-US', { weekday: 'short' });
     const holidayInfo = getCompanyHolidayInfo(dateStr);
     const isCompanyHoliday = holidayInfo.isHoliday;
+    const existingStats = existingStatsByDate[dateStr] || { activityCount: 0, totalMinutes: 0 };
+    const existingHours = Number((existingStats.totalMinutes / 60).toFixed(2));
+    const remainingMinutesToGenerate = Math.max(0, targetMinutes - existingStats.totalMinutes);
 
     // Skip weekends/holidays unless specified
     if ((isWeekend && !includeWeekends) || isCompanyHoliday) {
@@ -128,7 +207,12 @@ export function balanceCommitsAcrossDateRange(
         source: 'sentence_bank',
         commitCount: 0,
         activities: [],
+        existingActivityCount: existingStats.activityCount,
+        existingHours,
         totalHours: 0,
+        combinedHours: existingHours,
+        targetHours: baseConfig.targetHours,
+        remainingHours: Number((remainingMinutesToGenerate / 60).toFixed(2)),
       });
       return;
     }
@@ -144,12 +228,39 @@ export function balanceCommitsAcrossDateRange(
 
     let activities: GeneratedActivity[] = [];
 
+    if (remainingMinutesToGenerate === 0) {
+      results.push({
+        dateStr,
+        dayOfWeek,
+        isWeekend,
+        isCompanyHoliday,
+        holidayName: holidayInfo.name,
+        source: 'already_filled',
+        commitCount: 0,
+        activities: [],
+        existingActivityCount: existingStats.activityCount,
+        existingHours,
+        totalHours: 0,
+        combinedHours: existingHours,
+        targetHours: baseConfig.targetHours,
+        remainingHours: 0,
+      });
+      return;
+    }
+
+    const startTimeStr = existingStats.latestEndMs
+      ? formatTimeHHMM(existingStats.latestEndMs)
+      : baseConfig.startTimeStr;
+    const targetHoursToGenerate = remainingMinutesToGenerate / 60;
+
     // If day has real feature/fix commits (or feature commits accompanied by merge commits)
     if (nonMergeCommits.length > 0) {
       const dayConfig: GeneratorConfig = {
         ...baseConfig,
         dateStr,
-        targetTaskCount: assignedCommits.length,
+        startTimeStr,
+        targetHours: targetHoursToGenerate,
+        targetTaskCount: getTaskCountForRemainingMinutes(assignedCommits.length, remainingMinutesToGenerate),
       };
 
       const commitSentences: SentenceItem[] = assignedCommits.map((c, i) => {
@@ -192,7 +303,9 @@ export function balanceCommitsAcrossDateRange(
       const dayConfig: GeneratorConfig = {
         ...baseConfig,
         dateStr,
-        targetTaskCount: combinedSentences.length,
+        startTimeStr,
+        targetHours: targetHoursToGenerate,
+        targetTaskCount: getTaskCountForRemainingMinutes(combinedSentences.length, remainingMinutesToGenerate),
         randomizeOrder: true,
       };
 
@@ -207,6 +320,7 @@ export function balanceCommitsAcrossDateRange(
     }
 
     const totalMins = activities.reduce((acc, a) => acc + a.durationMinutes, 0);
+    const combinedMinutes = existingStats.totalMinutes + totalMins;
 
     results.push({
       dateStr,
@@ -217,7 +331,12 @@ export function balanceCommitsAcrossDateRange(
       source,
       commitCount: assignedCommits.length,
       activities,
+      existingActivityCount: existingStats.activityCount,
+      existingHours,
       totalHours: Number((totalMins / 60).toFixed(2)),
+      combinedHours: Number((combinedMinutes / 60).toFixed(2)),
+      targetHours: baseConfig.targetHours,
+      remainingHours: Number((Math.max(0, targetMinutes - combinedMinutes) / 60).toFixed(2)),
     });
   });
 

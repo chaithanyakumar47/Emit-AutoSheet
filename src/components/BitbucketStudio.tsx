@@ -112,6 +112,12 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
       return;
     }
 
+    if (!emitSettings.token) {
+      addToast('error', 'Connect Emit first so existing hours can be checked before balancing.');
+      onOpenSettings();
+      return;
+    }
+
     let reposToFetch = loadedRepos;
 
     // If repos not loaded yet, fetch them now
@@ -129,6 +135,9 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
       return;
     }
 
+    const startMs = parseIsoToDate(startDateStr).getTime();
+    const endMs = parseIsoToDate(endDateStr).getTime() + 86400000 - 1;
+
     setIsFetchingCommits(true);
     const [commitRes, emitHistRes] = await Promise.all([
       fetchBitbucketCommits(
@@ -137,12 +146,17 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
         startDateStr,
         endDateStr
       ),
-      fetchEmitActivities(emitSettings, 50),
+      fetchEmitActivities(emitSettings, 250, startMs, endMs),
     ]);
     setIsFetchingCommits(false);
 
     if (!commitRes.success && loadedRepos.length > 0) {
       addToast('error', commitRes.error || 'Failed to fetch commits.');
+      return;
+    }
+
+    if (!emitHistRes.success) {
+      addToast('error', `Could not verify existing Emit hours: ${emitHistRes.error}`);
       return;
     }
 
@@ -173,7 +187,12 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
     );
 
     setBalancedDays(balanced);
-    addToast('success', `Fetched ${commitRes.commits.length} commits across ${dateList.length} days & balanced timesheets!`);
+    const existingHours = balanced.reduce((sum, day) => sum + day.existingHours, 0);
+    const plannedHours = balanced.reduce((sum, day) => sum + day.totalHours, 0);
+    addToast(
+      'success',
+      `Balanced ${commitRes.commits.length} commits after checking ${existingHours.toFixed(2)}h already logged. ${plannedHours.toFixed(2)}h newly planned.`
+    );
   };
 
   // 3. Bulk Submit to Emit
@@ -448,6 +467,13 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
                     Emit History (No Ticket ID)
                   </span>
                 );
+              } else if (day.source === 'already_filled') {
+                sourceBadge = (
+                  <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center">
+                    <CheckCircle2 className="w-3 h-3 mr-1 text-emerald-700" />
+                    Target Met
+                  </span>
+                );
               } else if (day.isCompanyHoliday) {
                 sourceBadge = (
                   <span className="px-2 py-0.5 text-[10px] font-bold rounded bg-violet-50 text-violet-700 border border-violet-200 flex items-center">
@@ -475,6 +501,21 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
                     {sourceBadge}
                   </div>
 
+                  <div className="grid grid-cols-3 overflow-hidden rounded-lg border border-slate-200 bg-white">
+                    <div className="px-2 py-2 border-r border-slate-200">
+                      <span className="block text-[9px] font-semibold uppercase text-slate-400">Logged</span>
+                      <span className="text-xs font-mono font-bold text-slate-700">{day.existingHours}h</span>
+                    </div>
+                    <div className="px-2 py-2 border-r border-slate-200">
+                      <span className="block text-[9px] font-semibold uppercase text-slate-400">New Plan</span>
+                      <span className="text-xs font-mono font-bold text-blue-700">{day.totalHours}h</span>
+                    </div>
+                    <div className="px-2 py-2">
+                      <span className="block text-[9px] font-semibold uppercase text-slate-400">After</span>
+                      <span className="text-xs font-mono font-bold text-slate-950">{day.combinedHours}h / {day.targetHours}h</span>
+                    </div>
+                  </div>
+
                   {/* Day Activities */}
                   <div className="text-xs text-slate-600 space-y-1 bg-slate-50 p-3 rounded-lg font-sans border border-slate-200 min-h-[90px]">
                     {day.activities.length > 0 ? (
@@ -489,8 +530,10 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
                         ))}
                       </ul>
                     ) : (
-                      <div className="text-slate-500 italic py-1 text-center">
-                        Non-working day / No entries.
+                      <div className={`py-2 text-center ${day.source === 'already_filled' ? 'text-emerald-700' : 'text-slate-500 italic'}`}>
+                        {day.source === 'already_filled'
+                          ? `${day.existingActivityCount} existing ${day.existingActivityCount === 1 ? 'entry' : 'entries'} already satisfy the target.`
+                          : 'Non-working day / No entries.'}
                       </div>
                     )}
                   </div>
@@ -498,7 +541,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
                   {/* Footer Actions */}
                   {day.activities.length > 0 && (
                     <div className="flex items-center justify-between pt-1">
-                      <span className="text-xs font-mono font-bold text-slate-400">Total: {day.totalHours}h</span>
+                      <span className="text-xs font-mono font-bold text-slate-400">Adding: {day.totalHours}h</span>
                       <div className="flex items-center space-x-1.5">
                         <button
                           onClick={async () => {
