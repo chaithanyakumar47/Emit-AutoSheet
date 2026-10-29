@@ -383,18 +383,6 @@ export async function fetchEmitActivities(
     return { success: false, activities: [], error: 'Emit auth token is not configured in settings.' };
   }
 
-  const endMs = toDateMs || Date.now();
-  const extraParams: Record<string, string> = {
-    toDate: endMs.toString(),
-    limit: limit.toString(),
-    skip: '0',
-  };
-  if (fromDateMs) {
-    extraParams['fromDate'] = fromDateMs.toString();
-  }
-
-  const url = resolveTargetUrl(settings, '/member/list_activities', extraParams);
-
   try {
     const headers: Record<string, string> = {
       'Accept': 'application/json',
@@ -406,18 +394,40 @@ export async function fetchEmitActivities(
       headers['Cookie'] = settings.cookie;
     }
 
-    const response = await fetch(url, { method: 'GET', headers });
+    const requestedLimit = Math.max(1, Math.floor(limit));
+    const pageLimit = Math.min(100, requestedLimit);
+    const endMs = toDateMs || Date.now();
+    const activities: any[] = [];
 
-    if (response.ok) {
+    while (activities.length < requestedLimit) {
+      const currentLimit = Math.min(pageLimit, requestedLimit - activities.length);
+      const extraParams: Record<string, string> = {
+        toDate: endMs.toString(),
+        limit: currentLimit.toString(),
+        skip: activities.length.toString(),
+      };
+      if (fromDateMs) {
+        extraParams['fromDate'] = fromDateMs.toString();
+      }
+
+      const url = resolveTargetUrl(settings, '/member/list_activities', extraParams);
+      const response = await fetch(url, { method: 'GET', headers });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        return { success: false, activities: [], error: `HTTP ${response.status}: ${errText || response.statusText}` };
+      }
+
       const data = await response.json();
       const list = Array.isArray(data)
         ? data
         : data.activities || data.data || data.list || [];
-      return { success: true, activities: list };
-    } else {
-      const errText = await response.text();
-      return { success: false, activities: [], error: `HTTP ${response.status}: ${errText || response.statusText}` };
+
+      activities.push(...list);
+      if (list.length < currentLimit) break;
     }
+
+    return { success: true, activities };
   } catch (err: any) {
     return { success: false, activities: [], error: err.message || 'CORS restriction or network error' };
   }
