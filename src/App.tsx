@@ -315,16 +315,18 @@ export const App: React.FC = () => {
           </div>
         </section>
         
-        {/* Generator Controls */}
-        <GeneratorControls
-          config={config}
-          onChangeConfig={setConfig}
-          onGenerate={handleGenerate}
-          onShuffle={handleShuffle}
-          onApplyAiPolish={() => handleApplyAiPolish('professional')}
-          isPolishing={isPolishing}
-          projectsList={emitSettings.projects}
-        />
+        {/* Bitbucket has its own commit-driven generation controls. */}
+        {activeTab !== 'bitbucket' && (
+          <GeneratorControls
+            config={config}
+            onChangeConfig={setConfig}
+            onGenerate={handleGenerate}
+            onShuffle={handleShuffle}
+            onApplyAiPolish={() => handleApplyAiPolish('professional')}
+            isPolishing={isPolishing}
+            projectsList={emitSettings.projects}
+          />
+        )}
 
         {/* Tab 1: Timesheet Studio Overview */}
         {activeTab === 'studio' && (

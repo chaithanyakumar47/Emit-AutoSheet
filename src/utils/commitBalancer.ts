@@ -1,7 +1,12 @@
 import { BitbucketCommit, SentenceItem, GeneratorConfig, GeneratedActivity } from '../types/timesheet';
 import { generateTimesheet } from './timesheetGenerator';
 import { getCompanyHolidayInfo } from '../data/companyHolidays';
-import { isMergeCommit, stripJiraTicket } from './bitbucketIntegration';
+import {
+  dedupeBitbucketCommits,
+  formatBitbucketCommitText,
+  isMergeCommit,
+  stripJiraTicket,
+} from './bitbucketIntegration';
 
 export interface BalancedDayResult {
   dateStr: string;
@@ -28,7 +33,8 @@ export function balanceCommitsAcrossDateRange(
 ): BalancedDayResult[] {
   // 1. Group commits by dateStr YYYY-MM-DD
   const commitsByDate: Record<string, BitbucketCommit[]> = {};
-  commits.forEach(c => {
+  const uniqueCommits = dedupeBitbucketCommits(commits);
+  uniqueCommits.forEach(c => {
     if (!commitsByDate[c.dateStr]) commitsByDate[c.dateStr] = [];
     commitsByDate[c.dateStr].push(c);
   });
@@ -147,10 +153,9 @@ export function balanceCommitsAcrossDateRange(
       };
 
       const commitSentences: SentenceItem[] = assignedCommits.map((c, i) => {
-        const textWithTicket = c.ticketId ? `(${c.ticketId}) ${c.cleanMessage}` : c.cleanMessage;
         return {
           id: `sent_commit_${i}_${c.hash}`,
-          text: textWithTicket,
+          text: formatBitbucketCommitText(c),
           category: 'BackendDevelopment',
           defaultDurationMinutes: 120,
           isActive: true,

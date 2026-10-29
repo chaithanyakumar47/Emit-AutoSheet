@@ -40,6 +40,56 @@ export function stripJiraTicket(msg: string): string {
   return cleaned || msg.trim();
 }
 
+function cleanBitbucketCommitMessage(commit: BitbucketCommit): string {
+  const candidate = commit.cleanMessage || commit.rawMessage;
+  const ticketId = commit.ticketId?.trim().toUpperCase() || '';
+  const normalizedCandidate = candidate.trim().toUpperCase()
+    .split('(').join('')
+    .split(')').join('')
+    .split('[').join('')
+    .split(']').join('');
+
+  if (ticketId && normalizedCandidate === ticketId) return '';
+  return stripJiraTicket(candidate);
+}
+
+/**
+ * Format a commit once, preserving one ticket prefix even when the message only contains a ticket ID.
+ */
+export function formatBitbucketCommitText(commit: BitbucketCommit): string {
+  const ticketId = commit.ticketId?.trim().toUpperCase();
+  const cleanMessage = cleanBitbucketCommitMessage(commit);
+  const ticketLabel = ticketId ? '(' + ticketId + ')' : '';
+
+  return [ticketLabel, cleanMessage].filter(Boolean).join(' ')
+    || commit.rawMessage.trim()
+    || 'Development activity';
+}
+
+/**
+ * Remove commits returned more than once across branches/repos while preserving
+ * distinct work descriptions that happen to share the same ticket ID.
+ */
+export function dedupeBitbucketCommits(commits: BitbucketCommit[]): BitbucketCommit[] {
+  const seenHashes = new Set<string>();
+  const seenContent = new Set<string>();
+
+  return commits.filter(commit => {
+    const hash = commit.hash?.trim().toLowerCase();
+    if (hash && seenHashes.has(hash)) return false;
+
+    const ticketId = commit.ticketId?.trim().toUpperCase() || '';
+    const cleanMessage = cleanBitbucketCommitMessage(commit).toLowerCase();
+    const contentKey = [commit.dateStr, ticketId, cleanMessage].join('|');
+
+    if ((ticketId || cleanMessage) && seenContent.has(contentKey)) return false;
+
+    if (hash) seenHashes.add(hash);
+    if (ticketId || cleanMessage) seenContent.add(contentKey);
+    return true;
+  });
+}
+
 /**
  * Generate Authorization Header for Bitbucket API
  */
@@ -210,7 +260,7 @@ export async function fetchBitbucketCommits(
             repoSlug: c.repoSlug || 'repo',
           };
         });
-        return { success: true, commits: mappedCommits };
+        return { success: true, commits: dedupeBitbucketCommits(mappedCommits) };
       }
     }
   } catch (err) {
@@ -275,7 +325,7 @@ export async function fetchBitbucketCommits(
     }
 
     allCommits.sort((a, b) => a.epochMs - b.epochMs);
-    return { success: true, commits: allCommits };
+    return { success: true, commits: dedupeBitbucketCommits(allCommits) };
   } catch (err: any) {
     return { success: false, commits: [], error: err.message || 'Failed to fetch Bitbucket commits.' };
   }

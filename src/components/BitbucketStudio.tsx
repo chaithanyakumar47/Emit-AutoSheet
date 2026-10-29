@@ -50,6 +50,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
   const [endDateStr, setEndDateStr] = useState(initialPresets.endDateStr);
   const [includeWeekends, setIncludeWeekends] = useState(false);
   const [targetHoursPerDay, setTargetHoursPerDay] = useState<number>(config.targetHours || 7.5);
+  const [customHoursInput, setCustomHoursInput] = useState(String(config.targetHours || 7.5));
 
   const [isLoadingRepos, setIsLoadingRepos] = useState(false);
   const [loadedRepos, setLoadedRepos] = useState<BitbucketRepo[]>([]);
@@ -206,6 +207,26 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
   };
 
   const targetHourPresets = [7, 7.5, 8, 8.5, 9];
+  const handleHoursInputChange = (value: string) => {
+    setCustomHoursInput(value);
+    const parsed = Number(value);
+    if (Number.isFinite(parsed) && parsed >= 1 && parsed <= 24) {
+      setTargetHoursPerDay(parsed);
+    }
+  };
+
+  const normalizeHoursInput = () => {
+    const parsed = Number(customHoursInput);
+    if (!Number.isFinite(parsed)) {
+      setCustomHoursInput(String(targetHoursPerDay));
+      return;
+    }
+
+    const normalized = Math.min(24, Math.max(1, Math.round(parsed * 4) / 4));
+    setTargetHoursPerDay(normalized);
+    setCustomHoursInput(String(normalized));
+  };
+
 
   return (
     <div className="space-y-6">
@@ -274,7 +295,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
 
       {/* Date Range & Commit Fetch Control Bar */}
       <div className="glass-panel p-4 sm:p-5 rounded-xl space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
           <div className="min-w-0">
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Start Date
@@ -300,7 +321,7 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
           </div>
 
           {/* Bulk Hours per Day */}
-          <div>
+          <div className="min-w-0 sm:col-span-2 lg:col-span-2">
             <label className="text-[11px] font-semibold text-slate-500 uppercase block mb-1">
               Hours / Day
             </label>
@@ -308,7 +329,10 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
               {targetHourPresets.map(hrs => (
                 <button
                   key={hrs}
-                  onClick={() => setTargetHoursPerDay(hrs)}
+                  onClick={() => {
+                    setTargetHoursPerDay(hrs);
+                    setCustomHoursInput(String(hrs));
+                  }}
                   className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-all ${
                     targetHoursPerDay === hrs
                       ? 'bg-blue-700 text-white border border-blue-700'
@@ -318,6 +342,22 @@ export const BitbucketStudio: React.FC<BitbucketStudioProps> = ({
                   {hrs}h
                 </button>
               ))}
+              <label className="relative w-[4.75rem] shrink-0">
+                <span className="sr-only">Custom hours per day</span>
+                <input
+                  type="number"
+                  min="1"
+                  max="24"
+                  step="0.25"
+                  inputMode="decimal"
+                  value={customHoursInput}
+                  onChange={e => handleHoursInputChange(e.target.value)}
+                  onBlur={normalizeHoursInput}
+                  aria-label="Custom hours per day"
+                  className="w-full bg-white border border-slate-200 rounded-lg py-1.5 pl-2 pr-5 text-xs font-semibold text-slate-900 text-center focus:outline-none focus:border-blue-500"
+                />
+                <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] font-semibold text-slate-400">h</span>
+              </label>
             </div>
           </div>
 
